@@ -29,9 +29,7 @@ const NewBeerBrandPage: React.FC = () => {
       navigateToSuccess(`Beer brand "${brandName}" has been created!`);
     } catch (error) {
       console.error('Failed to create brand:', error);
-      navigateToError('Failed to create beer brand. Please try again.', saveOperation);
-    } finally {
-      setSaving(false);
+      navigateToError('Failed to create beer brand. Please try again.');
     }
   }, [brandName, navigateToSuccess, navigateToError]);
 

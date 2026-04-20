@@ -14,8 +14,8 @@ export const useAppNavigation = () => {
   );
 
   const navigateToError = useCallback(
-    (message: string, retryOperation?: () => Promise<void>) => {
-      const state: ErrorPageState = { message, retryOperation };
+    (message: string) => {
+      const state: ErrorPageState = { message };
       navigate('/error', { state });
     },
     [navigate]

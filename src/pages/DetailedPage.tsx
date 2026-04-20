@@ -117,9 +117,7 @@ const DetailedPage: React.FC = () => {
       navigateToSuccess('Your drink has been saved!');
     } catch (error) {
       console.error('Failed to save drink:', error);
-      navigateToError('Failed to save your drink. Please try again.', saveOperation);
-    } finally {
-      setSaving(false);
+      navigateToError('Failed to save your drink. Please try again.');
     }
   }, [
     alcoholTypeId,

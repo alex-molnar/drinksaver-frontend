@@ -71,7 +71,6 @@ export interface ConsumptionType {
 // Navigation state types
 export interface ErrorPageState {
   message: string;
-  retryOperation?: () => Promise<void>;
 }
 
 export interface SuccessPageState {

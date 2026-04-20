@@ -94,9 +94,7 @@ const NewAlcoholPage: React.FC = () => {
       navigateToSuccess(`Alcohol type "${alcoholName}" has been created!`);
     } catch (error) {
       console.error('Failed to create alcohol type:', error);
-      navigateToError('Failed to create alcohol type. Please try again.', saveOperation);
-    } finally {
-      setSaving(false);
+      navigateToError('Failed to create alcohol type. Please try again.');
     }
   }, [alcoholName, volumes, navigateToSuccess, navigateToError]);
 

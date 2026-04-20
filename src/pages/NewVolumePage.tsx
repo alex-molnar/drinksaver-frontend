@@ -102,9 +102,7 @@ const NewVolumePage: React.FC = () => {
       navigateToSuccess(`Volume "${volumeName}" has been added to ${alcoholTypeName}!`);
     } catch (error) {
       console.error('Failed to create volume:', error);
-      navigateToError('Failed to create volume. Please try again.', saveOperation);
-    } finally {
-      setSaving(false);
+      navigateToError('Failed to create volume. Please try again.');
     }
   }, [volumeName, volumeValue, alcoholTypeId, alcoholTypeName, navigateToSuccess, navigateToError]);
 

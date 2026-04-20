@@ -47,11 +47,8 @@ const IndexPage: React.FC = () => {
       } catch (error) {
         console.error('Failed to save drink:', error);
         navigateToError(
-          `Failed to save ${recommendation.name}. Please try again.`,
-          saveOperation
+          `Failed to save ${recommendation.name}. Please try again.`
         );
-      } finally {
-        setSavingId(null);
       }
     },
     [navigateToSuccess, navigateToError]
