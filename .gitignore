@@ -25,3 +25,5 @@ dist-ssr
 
 .env
 prompt
+runcommand
+helm/drinksaver-frontend/install-cmd
