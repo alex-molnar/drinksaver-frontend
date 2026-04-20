@@ -1,0 +1,375 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /v1/drinks/new:
+    post:
+      tags:
+      - drinks-controller
+      operationId: saveDrink
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Drink"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SavedDrink"
+  /v1/drinks/beer/new:
+    post:
+      tags:
+      - drinks-controller
+      operationId: saveBeer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Beer"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SavedBeer"
+  /v1/beer/brands/{brand}:
+    post:
+      tags:
+      - beer-controller
+      operationId: saveBrand
+      parameters:
+      - name: brand
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Brand"
+  /v1/alcohol/types:
+    get:
+      tags:
+      - alcohol-controller
+      operationId: getAlcoholTypes
+      parameters:
+      - name: amount
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlcoholType"
+    post:
+      tags:
+      - alcohol-controller
+      operationId: createAlcoholType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewAlcoholEntry"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AlcoholType"
+  /v1/alcohol/types/{alcoholTypeId}/volumes:
+    get:
+      tags:
+      - alcohol-controller
+      operationId: getVolumesByAlcoholType
+      parameters:
+      - name: alcoholTypeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlcoholVolume"
+    post:
+      tags:
+      - alcohol-controller
+      operationId: saveVolumeForAlcoholType
+      parameters:
+      - name: alcoholTypeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewVolumeEntry"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AlcoholVolume"
+  /v1/recommendations/{userId}/list:
+    get:
+      tags:
+      - recommendations-controller
+      operationId: getRecommendationsList
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Recommendation"
+  /v1/beer/consumption-types:
+    get:
+      tags:
+      - beer-controller
+      operationId: getConsumptionTypesList
+      parameters:
+      - name: amount
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ConsumptionType"
+  /v1/beer/brands:
+    get:
+      tags:
+      - beer-controller
+      operationId: getBrandsList
+      parameters:
+      - name: amount
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Brand"
+components:
+  schemas:
+    Drink:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        date:
+          type: string
+        alcoholTypeId:
+          type: integer
+          format: int32
+        alcoholVolumeId:
+          type: integer
+          format: int32
+        comments:
+          type: string
+    SavedDrink:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        userId:
+          type: integer
+          format: int32
+        date:
+          type: string
+        alcoholTypeId:
+          type: integer
+          format: int32
+        alcoholVolumeId:
+          type: integer
+          format: int32
+        comments:
+          type: string
+    Beer:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        date:
+          type: string
+        alcoholTypeId:
+          type: integer
+          format: int32
+        alcoholVolumeId:
+          type: integer
+          format: int32
+        brandId:
+          type: integer
+          format: int32
+        consumptionTypeId:
+          type: integer
+          format: int32
+        comments:
+          type: string
+    SavedBeer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        userId:
+          type: integer
+          format: int32
+        date:
+          type: string
+        alcoholTypeId:
+          type: integer
+          format: int32
+        alcoholVolumeId:
+          type: integer
+          format: int32
+        brandId:
+          type: integer
+          format: int32
+        consumptionTypeId:
+          type: integer
+          format: int32
+        comments:
+          type: string
+    Brand:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    NewAlcoholEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        volumes:
+          type: array
+          items:
+            $ref: "#/components/schemas/NewVolumeEntry"
+    NewVolumeEntry:
+      type: object
+      properties:
+        name:
+          type: string
+        volume:
+          type: number
+          format: float
+    AlcoholType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        volumeIds:
+          type: array
+          items:
+            type: integer
+            format: int32
+    AlcoholVolume:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        volume:
+          type: number
+          format: float
+    Recommendation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        userId:
+          type: integer
+          format: int32
+        name:
+          type: string
+        alcoholTypeId:
+          type: integer
+          format: int32
+        alcoholVolumeId:
+          type: integer
+          format: int32
+        brandId:
+          type: integer
+          format: int32
+        consumptionTypeId:
+          type: integer
+          format: int32
+    ConsumptionType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
