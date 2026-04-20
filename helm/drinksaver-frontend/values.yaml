@@ -2,18 +2,13 @@
 replicaCount: 1
 
 image:
-  repository: drinksaver-frontend
+  repository: kingbrady
+  name: drinksaver-frontend
   pullPolicy: IfNotPresent
-  tag: "latest"
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
-
-# Backend API configuration
-backend:
-  # URL where the backend API is accessible from the browser
-  apiUrl: "http://localhost:8080"
 
 serviceAccount:
   create: true
@@ -27,7 +22,7 @@ podSecurityContext: {}
 securityContext: {}
 
 service:
-  type: ClusterIP
+  type: NodePort
   port: 80
 
 ingress:
