@@ -32,11 +32,15 @@ const DetailedPage: React.FC = () => {
   const { navigateToSuccess, navigateToError, navigateToNewAlcohol, navigateToNewVolume, navigateToNewBrand } =
     useAppNavigation();
 
+  // Helper to get today's date in YYYY-MM-DD format
+  const getTodayDate = () => new Date().toISOString().split('T')[0];
+
   // Form state
   const [alcoholTypeId, setAlcoholTypeId] = useState<number | ''>('');
   const [volumeId, setVolumeId] = useState<number | ''>('');
   const [consumptionTypeId, setConsumptionTypeId] = useState<number | ''>('');
   const [brandId, setBrandId] = useState<number | ''>('');
+  const [drinkDate, setDrinkDate] = useState(getTodayDate());
   const [comments, setComments] = useState('');
   const [saving, setSaving] = useState(false);
 
@@ -95,6 +99,9 @@ const DetailedPage: React.FC = () => {
     setSaving(true);
 
     const saveOperation = async () => {
+      // Use selected date or default to today
+      const dateToSend = drinkDate || getTodayDate();
+
       if (isBeer) {
         await saveBeer({
           alcoholTypeId: alcoholTypeId as number,
@@ -102,12 +109,14 @@ const DetailedPage: React.FC = () => {
           brandId: brandId as number,
           consumptionTypeId: consumptionTypeId as number,
           comments: comments || undefined,
+          date: dateToSend,
         });
       } else {
         await saveDrink({
           alcoholTypeId: alcoholTypeId as number,
           alcoholVolumeId: volumeId as number,
           comments: comments || undefined,
+          date: dateToSend,
         });
       }
     };
@@ -124,6 +133,7 @@ const DetailedPage: React.FC = () => {
     volumeId,
     brandId,
     consumptionTypeId,
+    drinkDate,
     comments,
     isBeer,
     navigateToSuccess,
@@ -252,6 +262,20 @@ const DetailedPage: React.FC = () => {
                 </Box>
               </>
             )}
+
+            {/* Date Selector */}
+            <TextField
+              label="Date"
+              type="date"
+              value={drinkDate}
+              onChange={(e) => setDrinkDate(e.target.value)}
+              fullWidth
+              helperText="Defaults to today's date"
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { max: getTodayDate() },
+              }}
+            />
 
             {/* Comments */}
             <TextField

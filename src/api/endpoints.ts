@@ -16,21 +16,21 @@ import type {
 const USER_ID = 1; // Hardcoded for initial implementation
 
 // Drinks endpoints
-export const saveDrink = async (drink: Omit<Drink, 'userId' | 'date'>): Promise<SavedDrink> => {
+export const saveDrink = async (drink: Omit<Drink, 'userId' | 'date'> & { date?: string }): Promise<SavedDrink> => {
   const payload: Drink = {
     ...drink,
     userId: USER_ID,
-    date: new Date().toISOString(),
+    date: drink.date || new Date().toISOString().split('T')[0],
   };
   const response = await apiClient.post<SavedDrink>('/v1/drinks/new', payload);
   return response.data;
 };
 
-export const saveBeer = async (beer: Omit<Beer, 'userId' | 'date'>): Promise<SavedBeer> => {
+export const saveBeer = async (beer: Omit<Beer, 'userId' | 'date'> & { date?: string }): Promise<SavedBeer> => {
   const payload: Beer = {
     ...beer,
     userId: USER_ID,
-    date: new Date().toISOString(),
+    date: beer.date || new Date().toISOString().split('T')[0],
   };
   const response = await apiClient.post<SavedBeer>('/v1/drinks/beer/new', payload);
   return response.data;
