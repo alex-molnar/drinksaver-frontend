@@ -108,7 +108,7 @@ const NewVolumePage: React.FC = () => {
 
   return (
     <Layout title="New Volume">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 1 }}>
         {/* Info message */}
         <Alert severity="info" sx={{ mb: 1 }}>
           You are saving a new volume for <strong>{alcoholTypeName}</strong>
@@ -152,7 +152,7 @@ const NewVolumePage: React.FC = () => {
           loading={saving}
           disabled={!isFormValid()}
           sx={{
-            mt: 2,
+            mt: 1,
             py: 1.5,
             opacity: isFormValid() ? 1 : 0.5,
           }}

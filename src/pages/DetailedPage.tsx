@@ -152,7 +152,7 @@ const DetailedPage: React.FC = () => {
 
   return (
     <Layout title="Add Drink">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 1 }}>
         {/* Alcohol Type Selector */}
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
           <FormControl fullWidth>
@@ -171,11 +171,18 @@ const DetailedPage: React.FC = () => {
             </Select>
           </FormControl>
           <IconButton
-            color="primary"
             onClick={navigateToNewAlcohol}
-            sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
+            sx={{ 
+              mt: 0.5, 
+              width: 56, 
+              height: 56, 
+              bgcolor: 'primary.main', 
+              color: 'white', 
+              borderRadius: 2,
+              '&:hover': { bgcolor: 'primary.dark' } 
+            }}
           >
-            <AddIcon />
+            <AddIcon sx={{ fontSize: 28 }} />
           </IconButton>
         </Box>
 
@@ -201,13 +208,20 @@ const DetailedPage: React.FC = () => {
                 </Select>
               </FormControl>
               <IconButton
-                color="primary"
                 onClick={() =>
                   navigateToNewVolume(alcoholTypeId as number, selectedType?.name || '')
                 }
-                sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
+                sx={{ 
+                  mt: 0.5, 
+                  width: 56, 
+                  height: 56, 
+                  bgcolor: 'primary.main', 
+                  color: 'white', 
+                  borderRadius: 2,
+                  '&:hover': { bgcolor: 'primary.dark' } 
+                }}
               >
-                <AddIcon />
+                <AddIcon sx={{ fontSize: 28 }} />
               </IconButton>
             </Box>
 
@@ -253,11 +267,18 @@ const DetailedPage: React.FC = () => {
                     </Select>
                   </FormControl>
                   <IconButton
-                    color="primary"
                     onClick={navigateToNewBrand}
-                    sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
+                    sx={{ 
+                      mt: 0.5, 
+                      width: 56, 
+                      height: 56, 
+                      bgcolor: 'primary.main', 
+                      color: 'white', 
+                      borderRadius: 2,
+                      '&:hover': { bgcolor: 'primary.dark' } 
+                    }}
                   >
-                    <AddIcon />
+                    <AddIcon sx={{ fontSize: 28 }} />
                   </IconButton>
                 </Box>
               </>
@@ -296,7 +317,7 @@ const DetailedPage: React.FC = () => {
               loading={saving}
               disabled={!isFormValid()}
               sx={{
-                mt: 2,
+                mt: 1,
                 py: 1.5,
                 opacity: isFormValid() ? 1 : 0.5,
               }}

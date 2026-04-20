@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, AppBar, Toolbar, Typography, Container } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography } from '@mui/material';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 
 interface LayoutProps {
@@ -25,19 +25,26 @@ const Layout: React.FC<LayoutProps> = ({ children, title = 'DrinkSaver' }) => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Container
+      <Box
         component="main"
-        maxWidth="sm"
         sx={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          py: 2,
-          px: 2,
+          py: 1.5,
+          px: 1.5,
+          maxWidth: '600px',
+          width: '100%',
+          mx: 'auto',
+          // On mobile, use minimal side padding
+          '@media (max-width: 600px)': {
+            px: 1,
+            py: 1,
+          },
         }}
       >
         {children}
-      </Container>
+      </Box>
     </Box>
   );
 };

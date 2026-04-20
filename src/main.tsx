@@ -34,6 +34,17 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    // Mobile-first: larger base font sizes
+    fontSize: 16,
+    body1: {
+      fontSize: '1rem',
+    },
+    body2: {
+      fontSize: '0.9375rem', // 15px - readable on mobile
+    },
+    button: {
+      fontSize: '1rem',
+    },
   },
   components: {
     MuiButton: {
@@ -41,15 +52,34 @@ const theme = createTheme({
         root: {
           textTransform: 'none',
           borderRadius: 8,
-          minHeight: 48, // Touch-friendly
+          minHeight: 48,
+          fontSize: '1rem',
+        },
+        sizeLarge: {
+          fontSize: '1.125rem',
+          minHeight: 56,
         },
       },
     },
     MuiTextField: {
+      defaultProps: {
+        size: 'medium',
+      },
       styleOverrides: {
         root: {
           '& .MuiInputBase-root': {
-            minHeight: 48, // Touch-friendly
+            minHeight: 56,
+            fontSize: '16px', // Prevents iOS zoom
+          },
+          '& .MuiInputBase-input': {
+            fontSize: '16px', // Prevents iOS zoom
+            padding: '16px 14px',
+          },
+          '& .MuiInputLabel-root': {
+            fontSize: '16px',
+          },
+          '& .MuiFormHelperText-root': {
+            fontSize: '0.875rem',
           },
         },
       },
@@ -57,7 +87,58 @@ const theme = createTheme({
     MuiSelect: {
       styleOverrides: {
         select: {
-          minHeight: 48, // Touch-friendly
+          minHeight: 56,
+          fontSize: '16px', // Prevents iOS zoom
+          display: 'flex',
+          alignItems: 'center',
+        },
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: '16px',
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: '16px',
+          minHeight: 48,
+        },
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          // Ensure minimum touch target
+          minWidth: 48,
+          minHeight: 48,
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          fontSize: '0.9375rem',
+          height: 36,
+        },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          fontSize: '0.9375rem',
+        },
+      },
+    },
+    MuiFormControl: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            minHeight: 56,
+          },
         },
       },
     },

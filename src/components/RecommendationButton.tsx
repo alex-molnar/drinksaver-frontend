@@ -23,22 +23,22 @@ const RecommendationButton: React.FC<RecommendationButtonProps> = ({
       sx={{
         width: '100%',
         height: '100%',
-        minHeight: 80,
+        minHeight: 72,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 2,
         textTransform: 'none',
-        p: 1,
+        p: 1.5,
       }}
     >
       <Box sx={{ textAlign: 'center' }}>
         <Typography
-          variant="body1"
           sx={{
-            fontWeight: 500,
+            fontWeight: 600,
             wordBreak: 'break-word',
-            lineHeight: 1.2,
+            lineHeight: 1.3,
+            fontSize: '1.1rem',
           }}
         >
           {name}

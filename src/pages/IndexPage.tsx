@@ -95,21 +95,20 @@ const IndexPage: React.FC = () => {
 
   return (
     <Layout title="Quick Save">
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
         <Typography
-          variant="body2"
           color="text.secondary"
-          sx={{ mb: 2, textAlign: 'center' }}
+          sx={{ mb: 1.5, textAlign: 'center', fontSize: '1rem' }}
         >
           Tap to save a drink quickly
         </Typography>
 
-        <Grid container spacing={2} sx={{ flex: 1 }}>
+        <Grid container spacing={1.5} sx={{ flex: 1 }}>
           {displayRecommendations.map((rec) => (
             <Grid
               size={6}
               key={rec.id}
-              sx={{ minHeight: 100 }}
+              sx={{ minHeight: 80 }}
             >
               <RecommendationButton
                 name={rec.name}
@@ -121,7 +120,7 @@ const IndexPage: React.FC = () => {
           ))}
           
           {/* Navigation button to detailed page - always last */}
-          <Grid size={6} sx={{ minHeight: 100 }}>
+          <Grid size={6} sx={{ minHeight: 80 }}>
             <RecommendationButton
               name="+ Add Custom"
               onClick={navigateToDetailed}
