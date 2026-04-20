@@ -35,7 +35,7 @@ const NewBeerBrandPage: React.FC = () => {
 
   return (
     <Layout title="New Beer Brand">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
         {/* Brand Name */}
         <TextField
           label="Brand Name"
@@ -55,7 +55,7 @@ const NewBeerBrandPage: React.FC = () => {
           loading={saving}
           disabled={!isFormValid()}
           sx={{
-            mt: 1,
+            mt: 2,
             py: 1.5,
             opacity: isFormValid() ? 1 : 0.5,
           }}

@@ -102,7 +102,7 @@ const NewAlcoholPage: React.FC = () => {
 
   return (
     <Layout title="New Alcohol Type">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, py: 1 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
         {/* Alcohol Name */}
         <TextField
           label="Alcohol Type Name"
@@ -166,20 +166,12 @@ const NewAlcoholPage: React.FC = () => {
               sx={{ flex: 1 }}
             />
             <IconButton
+              color="primary"
               onClick={handleAddVolume}
               disabled={!canAddVolume}
-              sx={{ 
-                mt: 0, 
-                width: 56, 
-                height: 56, 
-                bgcolor: canAddVolume ? 'primary.main' : 'grey.300', 
-                color: 'white', 
-                borderRadius: 2,
-                '&:hover': { bgcolor: canAddVolume ? 'primary.dark' : 'grey.400' },
-                '&.Mui-disabled': { bgcolor: 'grey.300', color: 'grey.500' }
-              }}
+              sx={{ mt: 0.5, minWidth: 44, minHeight: 44 }}
             >
-              <AddIcon sx={{ fontSize: 28 }} />
+              <AddIcon />
             </IconButton>
           </Box>
         </Box>
@@ -193,7 +185,7 @@ const NewAlcoholPage: React.FC = () => {
           loading={saving}
           disabled={!isFormValid()}
           sx={{
-            mt: 1,
+            mt: 2,
             py: 1.5,
             opacity: isFormValid() ? 1 : 0.5,
           }}

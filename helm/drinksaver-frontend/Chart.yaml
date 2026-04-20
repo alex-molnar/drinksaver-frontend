@@ -3,7 +3,7 @@ name: drinksaver-frontend
 description: A Helm chart for DrinkSaver Frontend - Mobile-first drink tracking application
 type: application
 version: 0.1.0
-appVersion: "1.1.0"
+appVersion: "1.0.1"
 maintainers:
   - name: DrinkSaver Team
 keywords:

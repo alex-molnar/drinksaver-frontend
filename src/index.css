@@ -1,4 +1,4 @@
-/* Base styles - Mobile first approach */
+/* Base styles - MUI handles most styling */
 * {
   margin: 0;
   padding: 0;
@@ -13,4 +13,11 @@ html, body {
 #root {
   height: 100%;
   width: 100%;
+}
+
+/* Prevent iOS zoom on input focus */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
 }
