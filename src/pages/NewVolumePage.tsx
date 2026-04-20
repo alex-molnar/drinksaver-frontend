@@ -41,7 +41,13 @@ const NewVolumePage: React.FC = () => {
 
   const { alcoholTypeId, alcoholTypeName } = state;
 
-  // Validate volume value (positive, < 2)
+  // Check if volume value is valid (pure function, no side effects)
+  const isVolumeValid = (value: string): boolean => {
+    const num = parseFloat(value);
+    return !isNaN(num) && num > 0 && num < 2;
+  };
+
+  // Validate volume value and update error state (use only in event handlers)
   const validateVolume = (value: string): boolean => {
     const num = parseFloat(value);
     if (isNaN(num)) {
@@ -75,7 +81,7 @@ const NewVolumePage: React.FC = () => {
       volumeName.trim().length > 0 &&
       volumeValue.trim().length > 0 &&
       !volumeError &&
-      validateVolume(volumeValue)
+      isVolumeValid(volumeValue)
     );
   };
 
