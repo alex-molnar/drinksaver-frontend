@@ -5,9 +5,16 @@ import {
   TextField,
   InputAdornment,
   Alert,
+  Paper,
+  Typography,
+  Fab,
+  Zoom,
+  CircularProgress,
+  Button,
 } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import StraightenIcon from '@mui/icons-material/Straighten';
 import Layout from '../components/Layout';
-import LoadingButton from '../components/LoadingButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { createVolumeForAlcoholType } from '../api/endpoints';
 import type { NewVolumePageState } from '../types/api';
@@ -26,14 +33,14 @@ const NewVolumePage: React.FC = () => {
   // Redirect if no state provided
   if (!state) {
     return (
-      <Layout title="New Volume">
+      <Layout title="New Volume" showBackButton hideBottomNav>
         <Box sx={{ py: 2 }}>
-          <Alert severity="error" sx={{ mb: 2 }}>
+          <Alert severity="error" sx={{ mb: 2, borderRadius: 3 }}>
             Missing alcohol type information. Please go back and try again.
           </Alert>
-          <LoadingButton variant="contained" onClick={navigateToHome}>
+          <Button variant="contained" onClick={navigateToHome} fullWidth>
             Back to Home
-          </LoadingButton>
+          </Button>
         </Box>
       </Layout>
     );
@@ -107,60 +114,76 @@ const NewVolumePage: React.FC = () => {
   }, [volumeName, volumeValue, alcoholTypeId, alcoholTypeName, navigateToSuccess, navigateToError]);
 
   return (
-    <Layout title="New Volume">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
+    <Layout title="New Volume" showBackButton>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pb: 10 }}>
         {/* Info message */}
-        <Alert severity="info" sx={{ mb: 1 }}>
-          You are saving a new volume for <strong>{alcoholTypeName}</strong>
+        <Alert
+          severity="info"
+          sx={{
+            borderRadius: 3,
+            bgcolor: 'primary.light',
+            color: 'white',
+            '& .MuiAlert-icon': { color: 'white' },
+          }}
+        >
+          Adding volume for <strong>{alcoholTypeName}</strong>
         </Alert>
 
-        {/* Volume Name */}
-        <TextField
-          label="Volume Name"
-          value={volumeName}
-          onChange={(e) => setVolumeName(e.target.value)}
-          fullWidth
-          required
-          placeholder="e.g., Pint, Shot, Glass"
-        />
+        {/* Volume Details */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <StraightenIcon sx={{ color: 'primary.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              Volume Details
+            </Typography>
+          </Box>
 
-        {/* Volume Value */}
-        <TextField
-          label="Volume in Liters"
-          value={volumeValue}
-          onChange={handleVolumeValueChange}
-          fullWidth
-          required
-          type="number"
-          error={!!volumeError}
-          helperText={volumeError || 'Enter a positive number less than 2'}
-          placeholder="e.g., 0.5"
-          slotProps={{
-            input: {
-              endAdornment: <InputAdornment position="end">L</InputAdornment>,
-            },
-            htmlInput: { step: 0.01, min: 0.01, max: 1.99 },
-          }}
-        />
+          <TextField
+            label="Volume Name"
+            value={volumeName}
+            onChange={(e) => setVolumeName(e.target.value)}
+            fullWidth
+            required
+            placeholder="e.g., Pint, Shot, Glass"
+            sx={{ mb: 2 }}
+          />
 
-        {/* Submit Button */}
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleSubmit}
-          loading={saving}
-          disabled={!isFormValid()}
-          sx={{
-            mt: 2,
-            py: 1.5,
-            opacity: isFormValid() ? 1 : 0.5,
-          }}
-          fullWidth
-        >
-          Create Volume
-        </LoadingButton>
+          <TextField
+            label="Volume in Liters"
+            value={volumeValue}
+            onChange={handleVolumeValueChange}
+            fullWidth
+            required
+            type="number"
+            error={!!volumeError}
+            helperText={volumeError || 'Enter a positive number less than 2'}
+            placeholder="e.g., 0.5"
+            slotProps={{
+              input: {
+                endAdornment: <InputAdornment position="end">L</InputAdornment>,
+              },
+              htmlInput: { step: 0.01, min: 0.01, max: 1.99 },
+            }}
+          />
+        </Paper>
       </Box>
+
+      {/* Floating Action Button */}
+      <Zoom in={isFormValid()}>
+        <Fab
+          color="primary"
+          onClick={handleSubmit}
+          disabled={saving || !isFormValid()}
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 20,
+            zIndex: 1200,
+          }}
+        >
+          {saving ? <CircularProgress size={24} color="inherit" /> : <SaveIcon />}
+        </Fab>
+      </Zoom>
     </Layout>
   );
 };

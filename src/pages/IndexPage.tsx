@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Grid, CircularProgress, Typography } from '@mui/material';
+import { Box, Grid, CircularProgress, Typography, Paper } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import RecommendationButton from '../components/RecommendationButton';
@@ -65,7 +65,7 @@ const IndexPage: React.FC = () => {
             justifyContent: 'center',
           }}
         >
-          <CircularProgress />
+          <CircularProgress color="primary" />
         </Box>
       </Layout>
     );
@@ -96,20 +96,33 @@ const IndexPage: React.FC = () => {
   return (
     <Layout title="Quick Save">
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ mb: 2, textAlign: 'center' }}
+        {/* Header Section */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            mb: 3,
+            bgcolor: 'primary.main',
+            color: 'white',
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f57c00 0%, #ffb74d 100%)',
+          }}
         >
-          Tap to save a drink quickly
-        </Typography>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+            One-tap save
+          </Typography>
+          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+            Tap your favorite drink to log it instantly
+          </Typography>
+        </Paper>
 
+        {/* Recommendations Grid */}
         <Grid container spacing={2} sx={{ flex: 1 }}>
           {displayRecommendations.map((rec) => (
             <Grid
               size={6}
               key={rec.id}
-              sx={{ minHeight: 100 }}
+              sx={{ minHeight: 120 }}
             >
               <RecommendationButton
                 name={rec.name}
@@ -120,12 +133,13 @@ const IndexPage: React.FC = () => {
             </Grid>
           ))}
           
-          {/* Navigation button to detailed page - always last */}
-          <Grid size={6} sx={{ minHeight: 100 }}>
+          {/* Add Custom button - always last */}
+          <Grid size={6} sx={{ minHeight: 120 }}>
             <RecommendationButton
-              name="+ Add Custom"
+              name="Add Custom"
               onClick={navigateToDetailed}
               disabled={savingId !== null}
+              isAddButton
             />
           </Grid>
         </Grid>

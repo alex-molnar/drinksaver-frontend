@@ -6,10 +6,15 @@ import {
   Typography,
   Chip,
   InputAdornment,
+  Paper,
+  Fab,
+  Zoom,
+  CircularProgress,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 import Layout from '../components/Layout';
-import LoadingButton from '../components/LoadingButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { createAlcoholType } from '../api/endpoints';
 import type { NewVolumeEntry } from '../types/api';
@@ -101,50 +106,57 @@ const NewAlcoholPage: React.FC = () => {
   const canAddVolume = volumeName.trim() && volumeValue.trim() && !volumeError;
 
   return (
-    <Layout title="New Alcohol Type">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
-        {/* Alcohol Name */}
-        <TextField
-          label="Alcohol Type Name"
-          value={alcoholName}
-          onChange={(e) => setAlcoholName(e.target.value)}
-          fullWidth
-          required
-          placeholder="e.g., Whiskey, Wine, Vodka"
-        />
-
-        {/* Added Volumes Display */}
-        {volumes.length > 0 && (
-          <Box>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              Added volumes:
+    <Layout title="New Alcohol Type" showBackButton>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pb: 10 }}>
+        {/* Section 1: Alcohol Name */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <LocalBarIcon sx={{ color: 'primary.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              Alcohol Details
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {volumes.map((vol, index) => (
-                <Chip
-                  key={index}
-                  label={`${vol.name} (${vol.volume}L)`}
-                  onDelete={() => handleRemoveVolume(index)}
-                  color="primary"
-                  variant="outlined"
-                />
-              ))}
-            </Box>
           </Box>
-        )}
 
-        {/* Volume Input Section */}
-        <Box>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-            Add volumes (optional):
+          <TextField
+            label="Alcohol Type Name"
+            value={alcoholName}
+            onChange={(e) => setAlcoholName(e.target.value)}
+            fullWidth
+            required
+            placeholder="e.g., Whiskey, Wine, Vodka"
+          />
+        </Paper>
+
+        {/* Section 2: Volumes */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+            Volumes (optional)
           </Typography>
-          
+
+          {/* Added Volumes Display */}
+          {volumes.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {volumes.map((vol, index) => (
+                  <Chip
+                    key={index}
+                    label={`${vol.name} (${vol.volume}L)`}
+                    onDelete={() => handleRemoveVolume(index)}
+                    color="primary"
+                    sx={{ fontWeight: 500 }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          {/* Volume Input */}
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
             <TextField
-              label="Volume Name"
+              label="Name"
               value={volumeName}
               onChange={(e) => setVolumeName(e.target.value)}
-              placeholder="e.g., Shot, Glass"
+              placeholder="e.g., Shot"
               size="small"
               sx={{ flex: 1 }}
             />
@@ -152,7 +164,7 @@ const NewAlcoholPage: React.FC = () => {
               label="Liters"
               value={volumeValue}
               onChange={handleVolumeValueChange}
-              placeholder="e.g., 0.5"
+              placeholder="0.5"
               type="number"
               size="small"
               error={!!volumeError}
@@ -169,31 +181,37 @@ const NewAlcoholPage: React.FC = () => {
               color="primary"
               onClick={handleAddVolume}
               disabled={!canAddVolume}
-              sx={{ mt: 0.5, minWidth: 44, minHeight: 44 }}
+              sx={{
+                mt: 0.5,
+                minWidth: 48,
+                minHeight: 48,
+                bgcolor: canAddVolume ? 'primary.light' : 'grey.200',
+                color: canAddVolume ? 'white' : 'grey.500',
+                '&:hover': { bgcolor: canAddVolume ? 'primary.main' : 'grey.200' },
+              }}
             >
               <AddIcon />
             </IconButton>
           </Box>
-        </Box>
-
-        {/* Submit Button */}
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleSubmit}
-          loading={saving}
-          disabled={!isFormValid()}
-          sx={{
-            mt: 2,
-            py: 1.5,
-            opacity: isFormValid() ? 1 : 0.5,
-          }}
-          fullWidth
-        >
-          Create Alcohol Type
-        </LoadingButton>
+        </Paper>
       </Box>
+
+      {/* Floating Action Button */}
+      <Zoom in={isFormValid()}>
+        <Fab
+          color="primary"
+          onClick={handleSubmit}
+          disabled={saving || !isFormValid()}
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 20,
+            zIndex: 1200,
+          }}
+        >
+          {saving ? <CircularProgress size={24} color="inherit" /> : <SaveIcon />}
+        </Fab>
+      </Zoom>
     </Layout>
   );
 };

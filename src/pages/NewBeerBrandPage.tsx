@@ -1,7 +1,16 @@
 import React, { useState, useCallback } from 'react';
-import { Box, TextField } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Paper,
+  Typography,
+  Fab,
+  Zoom,
+  CircularProgress,
+} from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
+import SportsBarIcon from '@mui/icons-material/SportsBar';
 import Layout from '../components/Layout';
-import LoadingButton from '../components/LoadingButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { createBrand } from '../api/endpoints';
 
@@ -34,36 +43,44 @@ const NewBeerBrandPage: React.FC = () => {
   }, [brandName, navigateToSuccess, navigateToError]);
 
   return (
-    <Layout title="New Beer Brand">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
-        {/* Brand Name */}
-        <TextField
-          label="Brand Name"
-          value={brandName}
-          onChange={(e) => setBrandName(e.target.value)}
-          fullWidth
-          required
-          placeholder="e.g., Heineken, Budweiser, Corona"
-        />
+    <Layout title="New Beer Brand" showBackButton>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pb: 10 }}>
+        {/* Brand Details */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <SportsBarIcon sx={{ color: 'primary.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              Brand Details
+            </Typography>
+          </Box>
 
-        {/* Submit Button */}
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={handleSubmit}
-          loading={saving}
-          disabled={!isFormValid()}
-          sx={{
-            mt: 2,
-            py: 1.5,
-            opacity: isFormValid() ? 1 : 0.5,
-          }}
-          fullWidth
-        >
-          Create Brand
-        </LoadingButton>
+          <TextField
+            label="Brand Name"
+            value={brandName}
+            onChange={(e) => setBrandName(e.target.value)}
+            fullWidth
+            required
+            placeholder="e.g., Heineken, Budweiser, Corona"
+          />
+        </Paper>
       </Box>
+
+      {/* Floating Action Button */}
+      <Zoom in={isFormValid()}>
+        <Fab
+          color="primary"
+          onClick={handleSubmit}
+          disabled={saving || !isFormValid()}
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 20,
+            zIndex: 1200,
+          }}
+        >
+          {saving ? <CircularProgress size={24} color="inherit" /> : <SaveIcon />}
+        </Fab>
+      </Zoom>
     </Layout>
   );
 };

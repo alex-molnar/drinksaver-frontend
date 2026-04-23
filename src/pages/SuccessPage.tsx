@@ -1,9 +1,9 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Box, Typography, Paper } from '@mui/material';
-import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
+import { Box, Typography, Paper, Button, Grow } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import HomeIcon from '@mui/icons-material/Home';
 import Layout from '../components/Layout';
-import LoadingButton from '../components/LoadingButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import type { SuccessPageState } from '../types/api';
 
@@ -15,7 +15,7 @@ const SuccessPage: React.FC = () => {
   const message = state?.message || 'Operation completed successfully!';
 
   return (
-    <Layout title="Success">
+    <Layout title="Success" hideBottomNav>
       <Box
         sx={{
           flex: 1,
@@ -23,43 +23,64 @@ const SuccessPage: React.FC = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 3,
+          gap: 4,
+          px: 2,
         }}
       >
-        <Paper
-          elevation={0}
-          sx={{
-            p: 4,
-            textAlign: 'center',
-            bgcolor: 'success.light',
-            borderRadius: 3,
-            width: '100%',
-            maxWidth: 320,
-          }}
-        >
-          <CheckCircleOutlined
-            sx={{ fontSize: 64, color: 'success.main', mb: 2 }}
-          />
-          <Typography
-            variant="h6"
-            color="success.dark"
-            sx={{ fontWeight: 500, mb: 1 }}
+        <Grow in timeout={400}>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 5,
+              textAlign: 'center',
+              background: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)',
+              borderRadius: 4,
+              width: '100%',
+              maxWidth: 340,
+            }}
           >
-            Success!
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {message}
-          </Typography>
-        </Paper>
+            <Box
+              sx={{
+                width: 80,
+                height: 80,
+                borderRadius: '50%',
+                bgcolor: 'success.main',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mx: 'auto',
+                mb: 3,
+                boxShadow: '0 4px 20px rgba(67, 160, 71, 0.4)',
+              }}
+            >
+              <CheckCircleIcon sx={{ fontSize: 48, color: 'white' }} />
+            </Box>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 700, color: 'success.dark', mb: 1.5 }}
+            >
+              Cheers! 🎉
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+              {message}
+            </Typography>
+          </Paper>
+        </Grow>
 
-        <LoadingButton
+        <Button
           variant="contained"
           color="primary"
+          size="large"
           onClick={navigateToHome}
-          sx={{ minWidth: 200 }}
+          startIcon={<HomeIcon />}
+          sx={{
+            minWidth: 200,
+            py: 1.5,
+            px: 4,
+          }}
         >
           Back to Home
-        </LoadingButton>
+        </Button>
       </Box>
     </Layout>
   );

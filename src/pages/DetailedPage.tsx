@@ -10,11 +10,18 @@ import {
   type SelectChangeEvent,
   CircularProgress,
   Typography,
+  Paper,
+  Divider,
+  Fab,
+  Zoom,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
+import SportsBarIcon from '@mui/icons-material/SportsBar';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/Layout';
-import LoadingButton from '../components/LoadingButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import {
   getAlcoholTypes,
@@ -144,7 +151,7 @@ const DetailedPage: React.FC = () => {
     return (
       <Layout title="Add Drink">
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <CircularProgress />
+          <CircularProgress color="primary" />
         </Box>
       </Layout>
     );
@@ -152,38 +159,44 @@ const DetailedPage: React.FC = () => {
 
   return (
     <Layout title="Add Drink">
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, py: 2 }}>
-        {/* Alcohol Type Selector */}
-        <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-          <FormControl fullWidth>
-            <InputLabel id="alcohol-type-label">Alcohol Type</InputLabel>
-            <Select
-              labelId="alcohol-type-label"
-              value={alcoholTypeId}
-              label="Alcohol Type"
-              onChange={handleAlcoholTypeChange}
-            >
-              {alcoholTypes?.map((type) => (
-                <MenuItem key={type.id} value={type.id}>
-                  {type.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <IconButton
-            color="primary"
-            onClick={navigateToNewAlcohol}
-            sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
-          >
-            <AddIcon />
-          </IconButton>
-        </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, pb: 10 }}>
+        {/* Section 1: Drink Type */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+            <LocalBarIcon sx={{ color: 'primary.main' }} />
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              What are you drinking?
+            </Typography>
+          </Box>
 
-        {/* Show remaining fields only when alcohol type is selected */}
-        {alcoholTypeId !== '' && (
-          <>
-            {/* Volume Selector */}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel id="alcohol-type-label">Alcohol Type</InputLabel>
+              <Select
+                labelId="alcohol-type-label"
+                value={alcoholTypeId}
+                label="Alcohol Type"
+                onChange={handleAlcoholTypeChange}
+              >
+                {alcoholTypes?.map((type) => (
+                  <MenuItem key={type.id} value={type.id}>
+                    {type.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <IconButton
+              color="primary"
+              onClick={navigateToNewAlcohol}
+              sx={{ mt: 0.5, minWidth: 48, minHeight: 48, bgcolor: 'primary.light', color: 'white', '&:hover': { bgcolor: 'primary.main' } }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Box>
+
+          {/* Volume - shows when type selected */}
+          {alcoholTypeId !== '' && (
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 2 }}>
               <FormControl fullWidth>
                 <InputLabel id="volume-label">Volume</InputLabel>
                 <Select
@@ -205,118 +218,139 @@ const DetailedPage: React.FC = () => {
                 onClick={() =>
                   navigateToNewVolume(alcoholTypeId as number, selectedType?.name || '')
                 }
-                sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
+                sx={{ mt: 0.5, minWidth: 48, minHeight: 48, bgcolor: 'primary.light', color: 'white', '&:hover': { bgcolor: 'primary.main' } }}
               >
                 <AddIcon />
               </IconButton>
             </Box>
+          )}
+        </Paper>
 
-            {/* Beer-specific fields */}
-            {isBeer && (
-              <>
-                {/* Consumption Type - NO + button */}
-                <FormControl fullWidth>
-                  <InputLabel id="consumption-type-label">Consumption Type</InputLabel>
-                  <Select
-                    labelId="consumption-type-label"
-                    value={consumptionTypeId}
-                    label="Consumption Type"
-                    onChange={(e) =>
-                      setConsumptionTypeId(e.target.value as number | '')
-                    }
-                    disabled={loadingConsumption}
-                  >
-                    {consumptionTypes?.map((ct) => (
-                      <MenuItem key={ct.id} value={ct.id}>
-                        {ct.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+        {/* Section 2: Beer Details (conditional) */}
+        {isBeer && (
+          <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <SportsBarIcon sx={{ color: 'primary.main' }} />
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Beer Details
+              </Typography>
+            </Box>
 
-                {/* Brand Selector */}
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="brand-label">Brand</InputLabel>
-                    <Select
-                      labelId="brand-label"
-                      value={brandId}
-                      label="Brand"
-                      onChange={(e) => setBrandId(e.target.value as number | '')}
-                      disabled={loadingBrands}
-                    >
-                      {brands?.map((brand) => (
-                        <MenuItem key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <IconButton
-                    color="primary"
-                    onClick={navigateToNewBrand}
-                    sx={{ mt: 1, minWidth: 44, minHeight: 44 }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </Box>
-              </>
-            )}
+            {/* Consumption Type */}
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel id="consumption-type-label">Consumption Type</InputLabel>
+              <Select
+                labelId="consumption-type-label"
+                value={consumptionTypeId}
+                label="Consumption Type"
+                onChange={(e) =>
+                  setConsumptionTypeId(e.target.value as number | '')
+                }
+                disabled={loadingConsumption}
+              >
+                {consumptionTypes?.map((ct) => (
+                  <MenuItem key={ct.id} value={ct.id}>
+                    {ct.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
 
-            {/* Date Selector */}
+            {/* Brand Selector */}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+              <FormControl fullWidth>
+                <InputLabel id="brand-label">Brand</InputLabel>
+                <Select
+                  labelId="brand-label"
+                  value={brandId}
+                  label="Brand"
+                  onChange={(e) => setBrandId(e.target.value as number | '')}
+                  disabled={loadingBrands}
+                >
+                  {brands?.map((brand) => (
+                    <MenuItem key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                color="primary"
+                onClick={navigateToNewBrand}
+                sx={{ mt: 0.5, minWidth: 48, minHeight: 48, bgcolor: 'primary.light', color: 'white', '&:hover': { bgcolor: 'primary.main' } }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Box>
+          </Paper>
+        )}
+
+        {/* Section 3: Additional Details */}
+        {alcoholTypeId !== '' && (
+          <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
+              <CalendarTodayIcon sx={{ color: 'primary.main' }} />
+              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                Additional Details
+              </Typography>
+            </Box>
+
             <TextField
               label="Date"
               type="date"
               value={drinkDate}
               onChange={(e) => setDrinkDate(e.target.value)}
               fullWidth
-              helperText="Defaults to today's date"
+              helperText="When did you have this drink?"
               slotProps={{
                 inputLabel: { shrink: true },
                 htmlInput: { max: getTodayDate() },
               }}
+              sx={{ mb: 2 }}
             />
 
-            {/* Comments */}
+            <Divider sx={{ my: 2 }} />
+
             <TextField
-              label="Comments (optional)"
+              label="Notes (optional)"
               multiline
               rows={3}
               value={comments}
               onChange={(e) => setComments(e.target.value)}
               fullWidth
+              placeholder="Add any notes about this drink..."
             />
+          </Paper>
+        )}
 
-            {/* Save Button */}
-            <LoadingButton
-              variant="contained"
-              color="primary"
-              size="large"
-              onClick={handleSave}
-              loading={saving}
-              disabled={!isFormValid()}
-              sx={{
-                mt: 2,
-                py: 1.5,
-                opacity: isFormValid() ? 1 : 0.5,
-              }}
-              fullWidth
-            >
-              Save Drink
-            </LoadingButton>
-
-            {!isFormValid() && (
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                sx={{ textAlign: 'center' }}
-              >
-                Please fill in all required fields
-              </Typography>
-            )}
-          </>
+        {/* Validation hint */}
+        {alcoholTypeId !== '' && !isFormValid() && (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ textAlign: 'center', mt: 1 }}
+          >
+            Please fill in all required fields to save
+          </Typography>
         )}
       </Box>
+
+      {/* Floating Action Button */}
+      <Zoom in={isFormValid()}>
+        <Fab
+          color="primary"
+          onClick={handleSave}
+          disabled={saving || !isFormValid()}
+          sx={{
+            position: 'fixed',
+            bottom: 80,
+            right: 20,
+            zIndex: 1200,
+          }}
+        >
+          {saving ? <CircularProgress size={24} color="inherit" /> : <SaveIcon />}
+        </Fab>
+      </Zoom>
     </Layout>
   );
 };
