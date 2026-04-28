@@ -1,7 +1,7 @@
 // API Types based on OpenAPI schema
 
 export interface Drink {
-  userId: number;
+  userId: string; // uuid
   date: string;
   alcoholTypeId: number;
   alcoholVolumeId: number;
@@ -13,7 +13,7 @@ export interface SavedDrink extends Drink {
 }
 
 export interface Beer {
-  userId: number;
+  userId: string;
   date: string;
   alcoholTypeId: number;
   alcoholVolumeId: number;
@@ -55,7 +55,7 @@ export interface NewVolumeEntry {
 
 export interface Recommendation {
   id: number;
-  userId: number;
+  userId: string;
   name: string;
   alcoholTypeId: number;
   alcoholVolumeId: number;

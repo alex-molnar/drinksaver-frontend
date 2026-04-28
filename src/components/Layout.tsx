@@ -9,12 +9,15 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   IconButton,
+  Tooltip,
 } from '@mui/material';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import FlashOnIcon from '@mui/icons-material/FlashOn';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HistoryIcon from '@mui/icons-material/History';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../auth';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -31,6 +34,7 @@ const Layout: React.FC<LayoutProps> = ({
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   // Determine active tab based on current route
   const getNavValue = () => {
@@ -83,6 +87,15 @@ const Layout: React.FC<LayoutProps> = ({
           >
             {title}
           </Typography>
+          <Tooltip title="Logout">
+            <IconButton
+              onClick={logout}
+              sx={{ color: 'text.secondary' }}
+              aria-label="logout"
+            >
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
 

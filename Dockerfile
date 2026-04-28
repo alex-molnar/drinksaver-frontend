@@ -14,7 +14,14 @@ COPY . .
 
 # Build the application with API URL (baked in at build time)
 ARG VITE_API_URL=http://localhost:8080
-RUN VITE_API_URL=${VITE_API_URL} npm run build
+ARG VITE_KEYCLOAK_URL=http://localhost:8081
+ARG VITE_KEYCLOAK_REALM=drinksaver
+ARG VITE_KEYCLOAK_CLIENT_ID=drinksaver-frontend
+RUN VITE_API_URL=${VITE_API_URL} \
+    VITE_KEYCLOAK_URL=${VITE_KEYCLOAK_URL} \
+    VITE_KEYCLOAK_REALM=${VITE_KEYCLOAK_REALM} \
+    VITE_KEYCLOAK_CLIENT_ID=${VITE_KEYCLOAK_CLIENT_ID} \
+    npm run build
 
 # Production stage
 FROM nginx:alpine

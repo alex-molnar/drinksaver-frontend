@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient, { getCurrentUserId } from './client';
 import type {
   Drink,
   SavedDrink,
@@ -13,13 +13,14 @@ import type {
   ConsumptionType,
 } from '../types/api';
 
-const USER_ID = 1; // Hardcoded for initial implementation
-
 // Drinks endpoints
 export const saveDrink = async (drink: Omit<Drink, 'userId' | 'date'> & { date?: string }): Promise<SavedDrink> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
   const payload: Drink = {
     ...drink,
-    userId: USER_ID,
+    userId: userId,
     date: drink.date || new Date().toISOString().split('T')[0],
   };
   const response = await apiClient.post<SavedDrink>('/v1/drinks/new', payload);
@@ -27,9 +28,12 @@ export const saveDrink = async (drink: Omit<Drink, 'userId' | 'date'> & { date?:
 };
 
 export const saveBeer = async (beer: Omit<Beer, 'userId' | 'date'> & { date?: string }): Promise<SavedBeer> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+  
   const payload: Beer = {
     ...beer,
-    userId: USER_ID,
+    userId: userId,
     date: beer.date || new Date().toISOString().split('T')[0],
   };
   const response = await apiClient.post<SavedBeer>('/v1/drinks/beer/new', payload);
@@ -38,7 +42,10 @@ export const saveBeer = async (beer: Omit<Beer, 'userId' | 'date'> & { date?: st
 
 // Recommendations endpoints
 export const getRecommendations = async (): Promise<Recommendation[]> => {
-  const response = await apiClient.get<Recommendation[]>(`/v1/recommendations/${USER_ID}/list`);
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+  
+  const response = await apiClient.get<Recommendation[]>(`/v1/recommendations/${userId}/list`);
   return response.data;
 };
 
