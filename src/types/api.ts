@@ -28,11 +28,13 @@ export interface SavedBeer extends Beer {
 
 export interface Brand {
   id: number;
+  userId?: string;
   name: string;
 }
 
 export interface AlcoholType {
   id: number;
+  userId?: string;
   name: string;
   volumeIds: number[];
 }
@@ -44,6 +46,7 @@ export interface AlcoholVolume {
 }
 
 export interface NewAlcoholEntry {
+  userId?: string;
   name: string;
   volumes?: NewVolumeEntry[];
 }

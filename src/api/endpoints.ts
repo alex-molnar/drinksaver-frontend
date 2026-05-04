@@ -50,15 +50,23 @@ export const getRecommendations = async (): Promise<Recommendation[]> => {
 };
 
 // Alcohol endpoints
-export const getAlcoholTypes = async (amount: number = 100): Promise<AlcoholType[]> => {
+export const getAlcoholTypes = async (): Promise<AlcoholType[]> => {
+  const userId = getCurrentUserId();
   const response = await apiClient.get<AlcoholType[]>('/v1/alcohol/types', {
-    params: { amount },
+    params: { userId },
   });
   return response.data;
 };
 
-export const createAlcoholType = async (entry: NewAlcoholEntry): Promise<AlcoholType> => {
-  const response = await apiClient.post<AlcoholType>('/v1/alcohol/types', entry);
+export const createAlcoholType = async (entry: Omit<NewAlcoholEntry, 'userId'>): Promise<AlcoholType> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const payload: NewAlcoholEntry = {
+    ...entry,
+    userId,
+  };
+  const response = await apiClient.post<AlcoholType>('/v1/alcohol/types', payload);
   return response.data;
 };
 
@@ -88,14 +96,18 @@ export const getConsumptionTypes = async (amount: number = 100): Promise<Consump
   return response.data;
 };
 
-export const getBrands = async (amount: number = 100): Promise<Brand[]> => {
+export const getBrands = async (): Promise<Brand[]> => {
+  const userId = getCurrentUserId();
   const response = await apiClient.get<Brand[]>('/v1/beer/brands', {
-    params: { amount },
+    params: { userId },
   });
   return response.data;
 };
 
 export const createBrand = async (brandName: string): Promise<Brand> => {
-  const response = await apiClient.post<Brand>(`/v1/beer/brands/${encodeURIComponent(brandName)}`);
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.post<Brand>(`/v1/beer/${userId}/brands/${encodeURIComponent(brandName)}`);
   return response.data;
 };

@@ -42,12 +42,18 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/SavedBeer"
-  /v1/beer/brands/{brand}:
+  /v1/beer/{userId}/brands/{brand}:
     post:
       tags:
       - beer-controller
       operationId: saveBrand
       parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
       - name: brand
         in: path
         required: true
@@ -66,13 +72,13 @@ paths:
       - alcohol-controller
       operationId: getAlcoholTypes
       parameters:
-      - name: amount
+      - name: userId
         in: query
         required: false
         schema:
-          type: integer
-          format: int32
-          default: 10
+          type: string
+          format: uuid
+          default: "10"
       responses:
         "200":
           description: OK
@@ -154,8 +160,8 @@ paths:
         in: path
         required: true
         schema:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
       responses:
         "200":
           description: OK
@@ -193,13 +199,13 @@ paths:
       - beer-controller
       operationId: getBrandsList
       parameters:
-      - name: amount
+      - name: userId
         in: query
         required: false
         schema:
-          type: integer
-          format: int32
-          default: 10
+          type: string
+          format: uuid
+          default: "10"
       responses:
         "200":
           description: OK
@@ -215,8 +221,8 @@ components:
       type: object
       properties:
         userId:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
         date:
           type: string
         alcoholTypeId:
@@ -234,8 +240,8 @@ components:
           type: integer
           format: int32
         userId:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
         date:
           type: string
         alcoholTypeId:
@@ -250,8 +256,8 @@ components:
       type: object
       properties:
         userId:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
         date:
           type: string
         alcoholTypeId:
@@ -275,8 +281,8 @@ components:
           type: integer
           format: int32
         userId:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
         date:
           type: string
         alcoholTypeId:
@@ -299,11 +305,17 @@ components:
         id:
           type: integer
           format: int32
+        userId:
+          type: string
+          format: uuid
         name:
           type: string
     NewAlcoholEntry:
       type: object
       properties:
+        userId:
+          type: string
+          format: uuid
         name:
           type: string
         volumes:
@@ -324,6 +336,9 @@ components:
         id:
           type: integer
           format: int32
+        userId:
+          type: string
+          format: uuid
         name:
           type: string
         volumeIds:
@@ -349,8 +364,8 @@ components:
           type: integer
           format: int32
         userId:
-          type: integer
-          format: int32
+          type: string
+          format: uuid
         name:
           type: string
         alcoholTypeId:
