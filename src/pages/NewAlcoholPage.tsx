@@ -28,6 +28,8 @@ const NewAlcoholPage: React.FC = () => {
   const [volumeValue, setVolumeValue] = useState('');
   const [volumeError, setVolumeError] = useState('');
   const [volumes, setVolumes] = useState<NewVolumeEntry[]>([]);
+  const [subtypeName, setSubtypeName] = useState('');
+  const [subtypes, setSubtypes] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
 
   // Validate volume value (positive, < 2)
@@ -78,6 +80,18 @@ const NewAlcoholPage: React.FC = () => {
     setVolumes(volumes.filter((_, i) => i !== index));
   };
 
+  const handleAddSubtype = () => {
+    if (!subtypeName.trim()) return;
+    setSubtypes([...subtypes, subtypeName.trim()]);
+    setSubtypeName('');
+  };
+
+  const handleRemoveSubtype = (index: number) => {
+    setSubtypes(subtypes.filter((_, i) => i !== index));
+  };
+
+  const canAddSubtype = subtypeName.trim().length > 0;
+
   const isFormValid = () => {
     return alcoholName.trim().length > 0;
   };
@@ -91,6 +105,7 @@ const NewAlcoholPage: React.FC = () => {
       await createAlcoholType({
         name: alcoholName.trim(),
         volumes: volumes.length > 0 ? volumes : undefined,
+        alcoholSubtypes: subtypes.length > 0 ? subtypes : undefined,
       });
     };
 
@@ -101,7 +116,7 @@ const NewAlcoholPage: React.FC = () => {
       console.error('Failed to create alcohol type:', error);
       navigateToError('Failed to create alcohol type. Please try again.');
     }
-  }, [alcoholName, volumes, navigateToSuccess, navigateToError]);
+  }, [alcoholName, volumes, subtypes, navigateToSuccess, navigateToError]);
 
   const canAddVolume = volumeName.trim() && volumeValue.trim() && !volumeError;
 
@@ -188,6 +203,57 @@ const NewAlcoholPage: React.FC = () => {
                 bgcolor: canAddVolume ? 'primary.light' : 'grey.200',
                 color: canAddVolume ? 'white' : 'grey.500',
                 '&:hover': { bgcolor: canAddVolume ? 'primary.main' : 'grey.200' },
+              }}
+            >
+              <AddIcon />
+            </IconButton>
+          </Box>
+        </Paper>
+
+        {/* Section 3: Subtypes */}
+        <Paper elevation={0} sx={{ p: 2.5, bgcolor: 'background.paper' }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>
+            Subtypes (optional)
+          </Typography>
+
+          {/* Added Subtypes Display */}
+          {subtypes.length > 0 && (
+            <Box sx={{ mb: 2 }}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                {subtypes.map((subtype, index) => (
+                  <Chip
+                    key={index}
+                    label={subtype}
+                    onDelete={() => handleRemoveSubtype(index)}
+                    color="primary"
+                    sx={{ fontWeight: 500 }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          )}
+
+          {/* Subtype Input */}
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-start' }}>
+            <TextField
+              label="Subtype Name"
+              value={subtypeName}
+              onChange={(e) => setSubtypeName(e.target.value)}
+              placeholder="e.g., Cabernet Sauvignon, Single Malt"
+              size="small"
+              fullWidth
+            />
+            <IconButton
+              color="primary"
+              onClick={handleAddSubtype}
+              disabled={!canAddSubtype}
+              sx={{
+                mt: 0.5,
+                minWidth: 48,
+                minHeight: 48,
+                bgcolor: canAddSubtype ? 'primary.light' : 'grey.200',
+                color: canAddSubtype ? 'white' : 'grey.500',
+                '&:hover': { bgcolor: canAddSubtype ? 'primary.main' : 'grey.200' },
               }}
             >
               <AddIcon />

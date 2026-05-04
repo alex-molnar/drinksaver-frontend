@@ -42,7 +42,7 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/SavedBeer"
-  /v1/beer/{userId}/brands/{brand}:
+  /v1/beer/{userId}/brands:
     post:
       tags:
       - beer-controller
@@ -54,11 +54,12 @@ paths:
         schema:
           type: string
           format: uuid
-      - name: brand
-        in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBeerBrand"
         required: true
-        schema:
-          type: string
       responses:
         "200":
           description: OK
@@ -66,6 +67,57 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Brand"
+  /v1/beer/brands/{brandId}/flavours:
+    get:
+      tags:
+      - beer-controller
+      operationId: getBrandNames
+      parameters:
+      - name: brandId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BeerFlavour"
+    post:
+      tags:
+      - beer-controller
+      operationId: saveBrandName
+      parameters:
+      - name: brandId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewBeerFlavour"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/BeerFlavour"
   /v1/alcohol/types:
     get:
       tags:
@@ -150,6 +202,57 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/AlcoholVolume"
+  /v1/alcohol/types/{alcoholTypeId}/subtypes:
+    get:
+      tags:
+      - alcohol-controller
+      operationId: getSubtypesByAlcoholType
+      parameters:
+      - name: alcoholTypeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AlcoholSubtype"
+    post:
+      tags:
+      - alcohol-controller
+      operationId: getSubtypesByAlcoholType_1
+      parameters:
+      - name: alcoholTypeId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewAlcoholSubtype"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AlcoholSubtype"
   /v1/recommendations/{userId}/list:
     get:
       tags:
@@ -228,6 +331,9 @@ components:
         alcoholTypeId:
           type: integer
           format: int32
+        alcoholSubtypeId:
+          type: integer
+          format: int32
         alcoholVolumeId:
           type: integer
           format: int32
@@ -263,10 +369,16 @@ components:
         alcoholTypeId:
           type: integer
           format: int32
+        alcoholSubtypeId:
+          type: integer
+          format: int32
         alcoholVolumeId:
           type: integer
           format: int32
         brandId:
+          type: integer
+          format: int32
+        beerFlavourId:
           type: integer
           format: int32
         consumptionTypeId:
@@ -299,10 +411,41 @@ components:
           format: int32
         comments:
           type: string
+    NewBeerBrand:
+      type: object
+      properties:
+        name:
+          type: string
+        flavours:
+          type: array
+          items:
+            type: string
     Brand:
       type: object
       properties:
         id:
+          type: integer
+          format: int32
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+    NewBeerFlavour:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+    BeerFlavour:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        brandId:
           type: integer
           format: int32
         userId:
@@ -322,6 +465,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/NewVolumeEntry"
+        alcoholSubtypes:
+          type: array
+          items:
+            type: string
     NewVolumeEntry:
       type: object
       properties:
@@ -357,6 +504,31 @@ components:
         volume:
           type: number
           format: float
+    NewAlcoholSubtype:
+      type: object
+      properties:
+        alcoholTypeId:
+          type: integer
+          format: int32
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
+    AlcoholSubtype:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        alcoholTypeId:
+          type: integer
+          format: int32
+        userId:
+          type: string
+          format: uuid
+        name:
+          type: string
     Recommendation:
       type: object
       properties:

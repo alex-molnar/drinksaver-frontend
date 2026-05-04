@@ -4,6 +4,7 @@ export interface Drink {
   userId: string; // uuid
   date: string;
   alcoholTypeId: number;
+  alcoholSubtypeId?: number;
   alcoholVolumeId: number;
   comments?: string;
 }
@@ -16,8 +17,10 @@ export interface Beer {
   userId: string;
   date: string;
   alcoholTypeId: number;
+  alcoholSubtypeId?: number;
   alcoholVolumeId: number;
   brandId: number;
+  beerFlavourId?: number;
   consumptionTypeId: number;
   comments?: string;
 }
@@ -49,6 +52,7 @@ export interface NewAlcoholEntry {
   userId?: string;
   name: string;
   volumes?: NewVolumeEntry[];
+  alcoholSubtypes?: string[];
 }
 
 export interface NewVolumeEntry {
@@ -83,6 +87,49 @@ export interface SuccessPageState {
 export interface NewVolumePageState {
   alcoholTypeId: number;
   alcoholTypeName: string;
+}
+
+export interface NewSubtypePageState {
+  alcoholTypeId: number;
+  alcoholTypeName: string;
+}
+
+export interface NewBeerFlavourPageState {
+  brandId: number;
+  brandName: string;
+}
+
+// Alcohol subtype types
+export interface AlcoholSubtype {
+  id: number;
+  alcoholTypeId: number;
+  userId?: string;
+  name: string;
+}
+
+export interface NewAlcoholSubtype {
+  alcoholTypeId: number;
+  userId?: string;
+  name: string;
+}
+
+// Beer flavour types
+export interface BeerFlavour {
+  id: number;
+  brandId: number;
+  userId?: string;
+  name: string;
+}
+
+export interface NewBeerFlavour {
+  userId?: string;
+  name: string;
+}
+
+// New beer brand with flavours
+export interface NewBeerBrand {
+  name: string;
+  flavours?: string[];
 }
 
 // Helper to check if a recommendation is for beer

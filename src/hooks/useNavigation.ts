@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
-import type { ErrorPageState, SuccessPageState, NewVolumePageState } from '../types/api';
+import type { ErrorPageState, SuccessPageState, NewVolumePageState, NewSubtypePageState, NewBeerFlavourPageState } from '../types/api';
 
 export const useAppNavigation = () => {
   const navigate = useNavigate();
@@ -45,6 +45,22 @@ export const useAppNavigation = () => {
     navigate('/new-brand');
   }, [navigate]);
 
+  const navigateToNewSubtype = useCallback(
+    (alcoholTypeId: number, alcoholTypeName: string) => {
+      const state: NewSubtypePageState = { alcoholTypeId, alcoholTypeName };
+      navigate('/new-subtype', { state });
+    },
+    [navigate]
+  );
+
+  const navigateToNewBeerFlavour = useCallback(
+    (brandId: number, brandName: string) => {
+      const state: NewBeerFlavourPageState = { brandId, brandName };
+      navigate('/new-beer-flavour', { state });
+    },
+    [navigate]
+  );
+
   return {
     navigateToSuccess,
     navigateToError,
@@ -53,5 +69,7 @@ export const useAppNavigation = () => {
     navigateToNewAlcohol,
     navigateToNewVolume,
     navigateToNewBrand,
+    navigateToNewSubtype,
+    navigateToNewBeerFlavour,
   };
 };

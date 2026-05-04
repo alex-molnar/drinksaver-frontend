@@ -7,10 +7,13 @@ import type {
   Brand,
   AlcoholType,
   AlcoholVolume,
+  AlcoholSubtype,
   NewAlcoholEntry,
   NewVolumeEntry,
   Recommendation,
   ConsumptionType,
+  BeerFlavour,
+  NewBeerBrand,
 } from '../types/api';
 
 // Drinks endpoints
@@ -88,6 +91,31 @@ export const createVolumeForAlcoholType = async (
   return response.data;
 };
 
+export const getSubtypesByAlcoholType = async (alcoholTypeId: number): Promise<AlcoholSubtype[]> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.get<AlcoholSubtype[]>(
+    `/v1/alcohol/types/${alcoholTypeId}/subtypes`,
+    { params: { userId } }
+  );
+  return response.data;
+};
+
+export const createSubtypeForAlcoholType = async (
+  alcoholTypeId: number,
+  name: string
+): Promise<AlcoholSubtype> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.post<AlcoholSubtype>(
+    `/v1/alcohol/types/${alcoholTypeId}/subtypes`,
+    { alcoholTypeId, userId, name }
+  );
+  return response.data;
+};
+
 // Beer endpoints
 export const getConsumptionTypes = async (amount: number = 100): Promise<ConsumptionType[]> => {
   const response = await apiClient.get<ConsumptionType[]>('/v1/beer/consumption-types', {
@@ -104,10 +132,32 @@ export const getBrands = async (): Promise<Brand[]> => {
   return response.data;
 };
 
-export const createBrand = async (brandName: string): Promise<Brand> => {
+export const createBrand = async (brand: NewBeerBrand): Promise<Brand> => {
   const userId = getCurrentUserId();
   if (!userId) throw new Error('User not authenticated');
 
-  const response = await apiClient.post<Brand>(`/v1/beer/${userId}/brands/${encodeURIComponent(brandName)}`);
+  const response = await apiClient.post<Brand>(`/v1/beer/${userId}/brands`, brand);
+  return response.data;
+};
+
+export const getBeerFlavours = async (brandId: number): Promise<BeerFlavour[]> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.get<BeerFlavour[]>(
+    `/v1/beer/brands/${brandId}/flavours`,
+    { params: { userId } }
+  );
+  return response.data;
+};
+
+export const createBeerFlavour = async (brandId: number, name: string): Promise<BeerFlavour> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.post<BeerFlavour>(
+    `/v1/beer/brands/${brandId}/flavours`,
+    { userId, name }
+  );
   return response.data;
 };

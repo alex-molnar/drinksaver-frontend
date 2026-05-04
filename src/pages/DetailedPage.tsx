@@ -26,8 +26,10 @@ import { useAppNavigation } from '../hooks/useNavigation';
 import {
   getAlcoholTypes,
   getVolumesByAlcoholType,
+  getSubtypesByAlcoholType,
   getConsumptionTypes,
   getBrands,
+  getBeerFlavours,
   saveDrink,
   saveBeer,
 } from '../api/endpoints';
@@ -36,7 +38,7 @@ import {
 const BEER_TYPE_NAME = 'Beer';
 
 const DetailedPage: React.FC = () => {
-  const { navigateToSuccess, navigateToError, navigateToNewAlcohol, navigateToNewVolume, navigateToNewBrand } =
+  const { navigateToSuccess, navigateToError, navigateToNewAlcohol, navigateToNewVolume, navigateToNewBrand, navigateToNewSubtype, navigateToNewBeerFlavour } =
     useAppNavigation();
 
   // Helper to get today's date in YYYY-MM-DD format
@@ -45,8 +47,10 @@ const DetailedPage: React.FC = () => {
   // Form state
   const [alcoholTypeId, setAlcoholTypeId] = useState<number | ''>('');
   const [volumeId, setVolumeId] = useState<number | ''>('');
+  const [subtypeId, setSubtypeId] = useState<number | ''>('');
   const [consumptionTypeId, setConsumptionTypeId] = useState<number | ''>('');
   const [brandId, setBrandId] = useState<number | ''>('');
+  const [beerFlavourId, setBeerFlavourId] = useState<number | ''>('');
   const [drinkDate, setDrinkDate] = useState(getTodayDate());
   const [comments, setComments] = useState('');
   const [saving, setSaving] = useState(false);
@@ -69,6 +73,13 @@ const DetailedPage: React.FC = () => {
     enabled: alcoholTypeId !== '',
   });
 
+  // Fetch subtypes when non-beer alcohol type is selected
+  const { data: subtypes, isLoading: loadingSubtypes } = useQuery({
+    queryKey: ['subtypes', alcoholTypeId],
+    queryFn: () => getSubtypesByAlcoholType(alcoholTypeId as number),
+    enabled: alcoholTypeId !== '' && !isBeer,
+  });
+
   // Fetch beer-specific data when beer is selected
   const { data: consumptionTypes, isLoading: loadingConsumption } = useQuery({
     queryKey: ['consumptionTypes'],
@@ -82,12 +93,29 @@ const DetailedPage: React.FC = () => {
     enabled: isBeer,
   });
 
+  // Fetch beer flavours when brand is selected
+  const { data: beerFlavours, isLoading: loadingFlavours } = useQuery({
+    queryKey: ['beerFlavours', brandId],
+    queryFn: () => getBeerFlavours(brandId as number),
+    enabled: isBeer && brandId !== '',
+  });
+
+  // Get selected brand for navigation
+  const selectedBrand = brands?.find((b) => b.id === brandId);
+
   // Reset dependent fields when alcohol type changes
   useEffect(() => {
     setVolumeId('');
+    setSubtypeId('');
     setConsumptionTypeId('');
     setBrandId('');
+    setBeerFlavourId('');
   }, [alcoholTypeId]);
+
+  // Reset beer flavour when brand changes
+  useEffect(() => {
+    setBeerFlavourId('');
+  }, [brandId]);
 
   // Form validation
   const isFormValid = () => {
@@ -114,6 +142,7 @@ const DetailedPage: React.FC = () => {
           alcoholTypeId: alcoholTypeId as number,
           alcoholVolumeId: volumeId as number,
           brandId: brandId as number,
+          beerFlavourId: beerFlavourId !== '' ? (beerFlavourId as number) : undefined,
           consumptionTypeId: consumptionTypeId as number,
           comments: comments || undefined,
           date: dateToSend,
@@ -121,6 +150,7 @@ const DetailedPage: React.FC = () => {
       } else {
         await saveDrink({
           alcoholTypeId: alcoholTypeId as number,
+          alcoholSubtypeId: subtypeId !== '' ? (subtypeId as number) : undefined,
           alcoholVolumeId: volumeId as number,
           comments: comments || undefined,
           date: dateToSend,
@@ -138,7 +168,9 @@ const DetailedPage: React.FC = () => {
   }, [
     alcoholTypeId,
     volumeId,
+    subtypeId,
     brandId,
+    beerFlavourId,
     consumptionTypeId,
     drinkDate,
     comments,
@@ -224,6 +256,37 @@ const DetailedPage: React.FC = () => {
               </IconButton>
             </Box>
           )}
+
+          {/* Subtype - shows when non-beer type selected */}
+          {alcoholTypeId !== '' && !isBeer && (
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 2 }}>
+              <FormControl fullWidth>
+                <InputLabel id="subtype-label">Subtype</InputLabel>
+                <Select
+                  labelId="subtype-label"
+                  value={subtypeId}
+                  label="Subtype"
+                  onChange={(e) => setSubtypeId(e.target.value as number | '')}
+                  disabled={loadingSubtypes}
+                >
+                  {subtypes?.map((subtype) => (
+                    <MenuItem key={subtype.id} value={subtype.id}>
+                      {subtype.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                color="primary"
+                onClick={() =>
+                  navigateToNewSubtype(alcoholTypeId as number, selectedType?.name || '')
+                }
+                sx={{ mt: 0.5, minWidth: 48, minHeight: 48, bgcolor: 'primary.light', color: 'white', '&:hover': { bgcolor: 'primary.main' } }}
+              >
+                <AddIcon />
+              </IconButton>
+            </Box>
+          )}
         </Paper>
 
         {/* Section 2: Beer Details (conditional) */}
@@ -282,6 +345,37 @@ const DetailedPage: React.FC = () => {
                 <AddIcon />
               </IconButton>
             </Box>
+
+            {/* Beer Flavour - shows when brand is selected */}
+            {brandId !== '' && (
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1, mt: 2 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="flavour-label">Flavour/Taste</InputLabel>
+                  <Select
+                    labelId="flavour-label"
+                    value={beerFlavourId}
+                    label="Flavour/Taste"
+                    onChange={(e) => setBeerFlavourId(e.target.value as number | '')}
+                    disabled={loadingFlavours}
+                  >
+                    {beerFlavours?.map((flavour) => (
+                      <MenuItem key={flavour.id} value={flavour.id}>
+                        {flavour.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <IconButton
+                  color="primary"
+                  onClick={() =>
+                    navigateToNewBeerFlavour(brandId as number, selectedBrand?.name || '')
+                  }
+                  sx={{ mt: 0.5, minWidth: 48, minHeight: 48, bgcolor: 'primary.light', color: 'white', '&:hover': { bgcolor: 'primary.main' } }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Box>
+            )}
           </Paper>
         )}
 

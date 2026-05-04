@@ -7,6 +7,8 @@ import ErrorPage from './pages/ErrorPage';
 import NewAlcoholPage from './pages/NewAlcoholPage';
 import NewVolumePage from './pages/NewVolumePage';
 import NewBeerBrandPage from './pages/NewBeerBrandPage';
+import NewSubtypePage from './pages/NewSubtypePage';
+import NewBeerFlavourPage from './pages/NewBeerFlavourPage';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
           <Route path="/new-alcohol" element={<NewAlcoholPage />} />
           <Route path="/new-volume" element={<NewVolumePage />} />
           <Route path="/new-brand" element={<NewBeerBrandPage />} />
+          <Route path="/new-subtype" element={<NewSubtypePage />} />
+          <Route path="/new-beer-flavour" element={<NewBeerFlavourPage />} />
         </Routes>
       </ProtectedRoute>
     </KeycloakProvider>
