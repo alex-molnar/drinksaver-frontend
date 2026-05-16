@@ -9,9 +9,14 @@ import { getRecommendations, saveBeer, saveDrink } from '../api/endpoints';
 import type { Recommendation } from '../types/api';
 import { isBeerRecommendation } from '../types/api';
 
+// Generate a unique key for a recommendation since id can be null
+const getRecommendationKey = (rec: Recommendation): string => {
+  return `${rec.id ?? 'null'}-${rec.alcoholTypeId}-${rec.alcoholVolumeId}-${rec.brandId ?? 'null'}`;
+};
+
 const IndexPage: React.FC = () => {
   const { navigateToSuccess, navigateToError, navigateToDetailed } = useAppNavigation();
-  const [savingId, setSavingId] = useState<number | null>(null);
+  const [savingKey, setSavingKey] = useState<string | null>(null);
   const { maxRecommendations, tileHeight } = useResponsiveTileCount();
 
   const {
@@ -25,7 +30,7 @@ const IndexPage: React.FC = () => {
 
   const handleSaveRecommendation = useCallback(
     async (recommendation: Recommendation) => {
-      setSavingId(recommendation.id);
+      setSavingKey(getRecommendationKey(recommendation));
 
       const saveOperation = async () => {
         if (isBeerRecommendation(recommendation)) {
@@ -53,7 +58,7 @@ const IndexPage: React.FC = () => {
         );
       }
     },
-    [navigateToSuccess, navigateToError]
+    [navigateToSuccess, navigateToError, setSavingKey]
   );
 
   if (isLoading) {
@@ -109,8 +114,8 @@ const IndexPage: React.FC = () => {
               <RecommendationButton
                 name={rec.name}
                 onClick={() => handleSaveRecommendation(rec)}
-                loading={savingId === rec.id}
-                disabled={savingId !== null && savingId !== rec.id}
+                loading={savingKey === getRecommendationKey(rec)}
+                disabled={savingKey !== null && savingKey !== getRecommendationKey(rec)}
               />
             </Grid>
           ))}
@@ -120,7 +125,7 @@ const IndexPage: React.FC = () => {
             <RecommendationButton
               name="Add Custom"
               onClick={navigateToDetailed}
-              disabled={savingId !== null}
+              disabled={savingKey !== null}
               isAddButton
             />
           </Grid>
