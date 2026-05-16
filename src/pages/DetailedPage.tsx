@@ -120,7 +120,7 @@ const DetailedPage: React.FC = () => {
   // Form validation
   const isFormValid = () => {
     if (alcoholTypeId === '' || volumeId === '') return false;
-    if (isBeer && (consumptionTypeId === '' || brandId === '')) return false;
+    if (isBeer && consumptionTypeId === '') return false;
     return true;
   };
 
@@ -141,7 +141,7 @@ const DetailedPage: React.FC = () => {
         await saveBeer({
           alcoholTypeId: alcoholTypeId as number,
           alcoholVolumeId: volumeId as number,
-          brandId: brandId as number,
+          brandId: brandId !== '' ? (brandId as number) : undefined,
           beerFlavourId: beerFlavourId !== '' ? (beerFlavourId as number) : undefined,
           consumptionTypeId: consumptionTypeId as number,
           comments: comments || undefined,

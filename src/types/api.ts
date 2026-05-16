@@ -19,7 +19,7 @@ export interface Beer {
   alcoholTypeId: number;
   alcoholSubtypeId?: number;
   alcoholVolumeId: number;
-  brandId: number;
+  brandId?: number;
   beerFlavourId?: number;
   consumptionTypeId: number;
   comments?: string;
