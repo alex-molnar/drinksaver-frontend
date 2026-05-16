@@ -22,6 +22,7 @@ import SportsBarIcon from '@mui/icons-material/SportsBar';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/Layout';
+import QuantitySelector from '../components/QuantitySelector';
 import { useAppNavigation } from '../hooks/useNavigation';
 import {
   getAlcoholTypes,
@@ -53,6 +54,7 @@ const DetailedPage: React.FC = () => {
   const [beerFlavourId, setBeerFlavourId] = useState<number | ''>('');
   const [drinkDate, setDrinkDate] = useState(getTodayDate());
   const [comments, setComments] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const [saving, setSaving] = useState(false);
 
   // Fetch alcohol types
@@ -146,6 +148,7 @@ const DetailedPage: React.FC = () => {
           consumptionTypeId: consumptionTypeId as number,
           comments: comments || undefined,
           date: dateToSend,
+          quantity: quantity > 1 ? quantity : undefined,
         });
       } else {
         await saveDrink({
@@ -154,13 +157,17 @@ const DetailedPage: React.FC = () => {
           alcoholVolumeId: volumeId as number,
           comments: comments || undefined,
           date: dateToSend,
+          quantity: quantity > 1 ? quantity : undefined,
         });
       }
     };
 
     try {
       await saveOperation();
-      navigateToSuccess('Your drink has been saved!');
+      const message = quantity > 1 
+        ? `${quantity} drinks have been saved!` 
+        : 'Your drink has been saved!';
+      navigateToSuccess(message);
     } catch (error) {
       console.error('Failed to save drink:', error);
       navigateToError('Failed to save your drink. Please try again.');
@@ -174,6 +181,7 @@ const DetailedPage: React.FC = () => {
     consumptionTypeId,
     drinkDate,
     comments,
+    quantity,
     isBeer,
     navigateToSuccess,
     navigateToError,
@@ -388,6 +396,21 @@ const DetailedPage: React.FC = () => {
                 Additional Details
               </Typography>
             </Box>
+
+            {/* Quantity selector */}
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5, textAlign: 'center' }}>
+                How many?
+              </Typography>
+              <QuantitySelector
+                value={quantity}
+                onChange={setQuantity}
+                min={1}
+                max={9}
+              />
+            </Box>
+
+            <Divider sx={{ mb: 2 }} />
 
             <TextField
               label="Date"

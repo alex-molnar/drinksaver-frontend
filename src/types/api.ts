@@ -7,6 +7,7 @@ export interface Drink {
   alcoholSubtypeId?: number;
   alcoholVolumeId: number;
   comments?: string;
+  quantity?: number; // 1-9, for batch insert
 }
 
 export interface SavedDrink extends Drink {
@@ -23,6 +24,7 @@ export interface Beer {
   beerFlavourId?: number;
   consumptionTypeId: number;
   comments?: string;
+  quantity?: number; // 1-9, for batch insert
 }
 
 export interface SavedBeer extends Beer {
