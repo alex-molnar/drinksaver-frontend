@@ -1,9 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Grid, CircularProgress, Typography, Paper } from '@mui/material';
+import { Box, Grid, CircularProgress, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import RecommendationButton from '../components/RecommendationButton';
 import { useAppNavigation } from '../hooks/useNavigation';
+import { useResponsiveTileCount } from '../hooks/useResponsiveTileCount';
 import { getRecommendations, saveBeer, saveDrink } from '../api/endpoints';
 import type { Recommendation } from '../types/api';
 import { isBeerRecommendation } from '../types/api';
@@ -11,6 +12,7 @@ import { isBeerRecommendation } from '../types/api';
 const IndexPage: React.FC = () => {
   const { navigateToSuccess, navigateToError, navigateToDetailed } = useAppNavigation();
   const [savingId, setSavingId] = useState<number | null>(null);
+  const { maxRecommendations, tileHeight } = useResponsiveTileCount();
 
   const {
     data: recommendations,
@@ -90,39 +92,19 @@ const IndexPage: React.FC = () => {
     );
   }
 
-  // Take first 7 recommendations max
-  const displayRecommendations = recommendations?.slice(0, 7) || [];
+  // Take recommendations based on available screen space
+  const displayRecommendations = recommendations?.slice(0, maxRecommendations) || [];
 
   return (
     <Layout title="Quick Save">
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        {/* Header Section */}
-        <Paper
-          elevation={0}
-          sx={{
-            p: 2,
-            mb: 3,
-            bgcolor: 'primary.main',
-            color: 'white',
-            borderRadius: 3,
-            background: 'linear-gradient(135deg, #f57c00 0%, #ffb74d 100%)',
-          }}
-        >
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-            One-tap save
-          </Typography>
-          <Typography variant="body2" sx={{ opacity: 0.9 }}>
-            Tap your favorite drink to log it instantly
-          </Typography>
-        </Paper>
-
         {/* Recommendations Grid */}
         <Grid container spacing={2} sx={{ flex: 1 }}>
           {displayRecommendations.map((rec) => (
             <Grid
               size={6}
               key={rec.id}
-              sx={{ minHeight: 120 }}
+              sx={{ height: tileHeight }}
             >
               <RecommendationButton
                 name={rec.name}
@@ -134,7 +116,7 @@ const IndexPage: React.FC = () => {
           ))}
           
           {/* Add Custom button - always last */}
-          <Grid size={6} sx={{ minHeight: 120 }}>
+          <Grid size={6} sx={{ height: tileHeight }}>
             <RecommendationButton
               name="Add Custom"
               onClick={navigateToDetailed}
