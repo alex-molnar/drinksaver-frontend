@@ -14,6 +14,8 @@ import {
   Divider,
   Fab,
   Zoom,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -55,6 +57,9 @@ const DetailedPage: React.FC = () => {
   const [comments, setComments] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [addToRecommendations, setAddToRecommendations] = useState(false);
+  const [onlyTemporarily, setOnlyTemporarily] = useState(false);
+  const [recommendationName, setRecommendationName] = useState('');
 
   // Fetch alcohol types
   const { data: alcoholTypes, isLoading: loadingTypes } = useQuery({
@@ -148,6 +153,9 @@ const DetailedPage: React.FC = () => {
         comments: comments || undefined,
         date: dateToSend,
         quantity: quantity > 1 ? quantity : undefined,
+        addToRecommendations: addToRecommendations || undefined,
+        onlyTemporarily: addToRecommendations && onlyTemporarily ? true : undefined,
+        name: addToRecommendations && recommendationName ? recommendationName : undefined,
       });
     };
 
@@ -174,6 +182,9 @@ const DetailedPage: React.FC = () => {
     isBeer,
     navigateToSuccess,
     navigateToError,
+    addToRecommendations,
+    onlyTemporarily,
+    recommendationName,
   ]);
 
   if (loadingTypes) {
@@ -414,6 +425,42 @@ const DetailedPage: React.FC = () => {
               }}
               sx={{ mb: 2 }}
             />
+
+            {/* Add to Recommendations */}
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={addToRecommendations}
+                  onChange={(e) => setAddToRecommendations(e.target.checked)}
+                />
+              }
+              label="Add as a recommendation"
+              sx={{ mb: 1 }}
+            />
+
+            {/* Conditional recommendation options */}
+            {addToRecommendations && (
+              <Box sx={{ pl: 4, mb: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={onlyTemporarily}
+                      onChange={(e) => setOnlyTemporarily(e.target.checked)}
+                    />
+                  }
+                  label="Only temporarily"
+                  sx={{ mb: 1, display: 'block' }}
+                />
+                <TextField
+                  label="Name"
+                  value={recommendationName}
+                  onChange={(e) => setRecommendationName(e.target.value)}
+                  fullWidth
+                  placeholder="Optional name for the recommendation"
+                  size="small"
+                />
+              </Box>
+            )}
 
             <Divider sx={{ my: 2 }} />
 

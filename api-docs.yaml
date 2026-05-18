@@ -333,6 +333,12 @@ components:
         quantity:
           type: integer
           format: int32
+        addToRecommendations:
+          type: boolean
+        onlyTemporarily:
+          type: boolean
+        name:
+          type: string
     SavedDrink:
       type: object
       properties:
@@ -511,6 +517,9 @@ components:
         consumptionTypeId:
           type: integer
           format: int32
+        endDate:
+          type: string
+          format: date-time
     ConsumptionType:
       type: object
       properties:

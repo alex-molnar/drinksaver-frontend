@@ -11,6 +11,9 @@ export interface Drink {
   consumptionTypeId?: number;
   comments?: string;
   quantity?: number; // 1-9, for batch insert
+  addToRecommendations?: boolean;
+  onlyTemporarily?: boolean;
+  name?: string;
 }
 
 export interface SavedDrink extends Drink {
