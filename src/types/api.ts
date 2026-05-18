@@ -6,28 +6,14 @@ export interface Drink {
   alcoholTypeId: number;
   alcoholSubtypeId?: number;
   alcoholVolumeId: number;
+  brandId?: number;
+  beerFlavourId?: number;
+  consumptionTypeId?: number;
   comments?: string;
   quantity?: number; // 1-9, for batch insert
 }
 
 export interface SavedDrink extends Drink {
-  id: number;
-}
-
-export interface Beer {
-  userId: string;
-  date: string;
-  alcoholTypeId: number;
-  alcoholSubtypeId?: number;
-  alcoholVolumeId: number;
-  brandId?: number;
-  beerFlavourId?: number;
-  consumptionTypeId: number;
-  comments?: string;
-  quantity?: number; // 1-9, for batch insert
-}
-
-export interface SavedBeer extends Beer {
   id: number;
 }
 
@@ -67,8 +53,10 @@ export interface Recommendation {
   userId: string;
   name: string;
   alcoholTypeId: number;
+  alcoholSubtypeId?: number;
   alcoholVolumeId: number;
   brandId?: number;
+  beerFlavourId?: number;
   consumptionTypeId?: number;
 }
 

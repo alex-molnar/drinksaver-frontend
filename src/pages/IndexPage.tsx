@@ -5,9 +5,8 @@ import Layout from '../components/Layout';
 import RecommendationButton from '../components/RecommendationButton';
 import { useAppNavigation } from '../hooks/useNavigation';
 import { useResponsiveTileCount } from '../hooks/useResponsiveTileCount';
-import { getRecommendations, saveBeer, saveDrink } from '../api/endpoints';
+import { getRecommendations, saveDrink } from '../api/endpoints';
 import type { Recommendation } from '../types/api';
-import { isBeerRecommendation } from '../types/api';
 
 // Generate a unique key for a recommendation since id can be null
 const getRecommendationKey = (rec: Recommendation): string => {
@@ -33,19 +32,14 @@ const IndexPage: React.FC = () => {
       setSavingKey(getRecommendationKey(recommendation));
 
       const saveOperation = async () => {
-        if (isBeerRecommendation(recommendation)) {
-          await saveBeer({
-            alcoholTypeId: recommendation.alcoholTypeId,
-            alcoholVolumeId: recommendation.alcoholVolumeId,
-            brandId: recommendation.brandId!,
-            consumptionTypeId: recommendation.consumptionTypeId!,
-          });
-        } else {
-          await saveDrink({
-            alcoholTypeId: recommendation.alcoholTypeId,
-            alcoholVolumeId: recommendation.alcoholVolumeId,
-          });
-        }
+        await saveDrink({
+          alcoholTypeId: recommendation.alcoholTypeId,
+          alcoholSubtypeId: recommendation.alcoholSubtypeId,
+          alcoholVolumeId: recommendation.alcoholVolumeId,
+          brandId: recommendation.brandId,
+          beerFlavourId: recommendation.beerFlavourId,
+          consumptionTypeId: recommendation.consumptionTypeId,
+        });
       };
 
       try {

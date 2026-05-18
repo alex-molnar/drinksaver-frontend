@@ -32,7 +32,6 @@ import {
   getBrands,
   getBeerFlavours,
   saveDrink,
-  saveBeer,
 } from '../api/endpoints';
 
 // Beer type ID - typically ID 1, but we check by name as fallback
@@ -139,27 +138,17 @@ const DetailedPage: React.FC = () => {
       // Use selected date or default to today
       const dateToSend = drinkDate || getTodayDate();
 
-      if (isBeer) {
-        await saveBeer({
-          alcoholTypeId: alcoholTypeId as number,
-          alcoholVolumeId: volumeId as number,
-          brandId: brandId !== '' ? (brandId as number) : undefined,
-          beerFlavourId: beerFlavourId !== '' ? (beerFlavourId as number) : undefined,
-          consumptionTypeId: consumptionTypeId as number,
-          comments: comments || undefined,
-          date: dateToSend,
-          quantity: quantity > 1 ? quantity : undefined,
-        });
-      } else {
-        await saveDrink({
-          alcoholTypeId: alcoholTypeId as number,
-          alcoholSubtypeId: subtypeId !== '' ? (subtypeId as number) : undefined,
-          alcoholVolumeId: volumeId as number,
-          comments: comments || undefined,
-          date: dateToSend,
-          quantity: quantity > 1 ? quantity : undefined,
-        });
-      }
+      await saveDrink({
+        alcoholTypeId: alcoholTypeId as number,
+        alcoholSubtypeId: subtypeId !== '' ? (subtypeId as number) : undefined,
+        alcoholVolumeId: volumeId as number,
+        brandId: brandId !== '' ? (brandId as number) : undefined,
+        beerFlavourId: beerFlavourId !== '' ? (beerFlavourId as number) : undefined,
+        consumptionTypeId: consumptionTypeId !== '' ? (consumptionTypeId as number) : undefined,
+        comments: comments || undefined,
+        date: dateToSend,
+        quantity: quantity > 1 ? quantity : undefined,
+      });
     };
 
     try {

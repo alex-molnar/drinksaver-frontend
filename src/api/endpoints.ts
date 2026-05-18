@@ -2,8 +2,6 @@ import apiClient, { getCurrentUserId } from './client';
 import type {
   Drink,
   SavedDrink,
-  Beer,
-  SavedBeer,
   Brand,
   AlcoholType,
   AlcoholVolume,
@@ -27,19 +25,6 @@ export const saveDrink = async (drink: Omit<Drink, 'userId' | 'date'> & { date?:
     date: drink.date || new Date().toISOString().split('T')[0],
   };
   const response = await apiClient.post<SavedDrink>('/v1/drinks/new', payload);
-  return response.data;
-};
-
-export const saveBeer = async (beer: Omit<Beer, 'userId' | 'date'> & { date?: string }): Promise<SavedBeer> => {
-  const userId = getCurrentUserId();
-  if (!userId) throw new Error('User not authenticated');
-  
-  const payload: Beer = {
-    ...beer,
-    userId: userId,
-    date: beer.date || new Date().toISOString().split('T')[0],
-  };
-  const response = await apiClient.post<SavedBeer>('/v1/drinks/beer/new', payload);
   return response.data;
 };
 
