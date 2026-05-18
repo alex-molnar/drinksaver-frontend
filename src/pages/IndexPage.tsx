@@ -113,6 +113,7 @@ const IndexPage: React.FC = () => {
             >
               <RecommendationButton
                 name={rec.name}
+                alcoholTypeId={rec.alcoholTypeId}
                 onClick={() => handleSaveRecommendation(rec)}
                 loading={savingKey === getRecommendationKey(rec)}
                 disabled={savingKey !== null && savingKey !== getRecommendationKey(rec)}
