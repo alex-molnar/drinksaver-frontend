@@ -28,4 +28,4 @@ prompt
 runcommand
 dockbuild
 helm/drinksaver-frontend/install-cmd
-test-values.yaml
+.version/*
