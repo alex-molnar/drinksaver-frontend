@@ -256,6 +256,32 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Recommendation"
+  /v1/drinks/{userId}/date/{date}:
+    get:
+      tags:
+      - drinks-controller
+      operationId: getSavedDrinks
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: date
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EditableDrink"
   /v1/beer/consumption-types:
     get:
       tags:
@@ -300,6 +326,28 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Brand"
+  /v1/drinks/byIds:
+    delete:
+      tags:
+      - drinks-controller
+      operationId: deleteSavedDrink
+      parameters:
+      - name: drinkIds
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: integer
+                format: int32
 components:
   schemas:
     Drink:
@@ -520,6 +568,14 @@ components:
         endDate:
           type: string
           format: date-time
+    EditableDrink:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
     ConsumptionType:
       type: object
       properties:

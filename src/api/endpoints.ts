@@ -12,6 +12,7 @@ import type {
   ConsumptionType,
   BeerFlavour,
   NewBeerBrand,
+  EditableDrink,
 } from '../types/api';
 
 // Drinks endpoints
@@ -144,5 +145,26 @@ export const createBeerFlavour = async (brandId: number, name: string): Promise<
     `/v1/beer/brands/${brandId}/flavours`,
     { userId, name }
   );
+  return response.data;
+};
+
+// History/Consumption endpoints
+export const getSavedDrinksByDate = async (date: string): Promise<EditableDrink[]> => {
+  const userId = getCurrentUserId();
+  if (!userId) throw new Error('User not authenticated');
+
+  const response = await apiClient.get<EditableDrink[]>(
+    `/v1/drinks/${userId}/date/${date}`
+  );
+  return response.data;
+};
+
+export const deleteDrinksByIds = async (drinkIds: number[]): Promise<number> => {
+  const response = await apiClient.delete<number>('/v1/drinks/byIds', {
+    params: { drinkIds },
+    paramsSerializer: {
+      indexes: null, // Serialize as drinkIds=1&drinkIds=2 instead of drinkIds[0]=1&drinkIds[1]=2
+    },
+  });
   return response.data;
 };

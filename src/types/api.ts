@@ -119,6 +119,12 @@ export interface NewBeerFlavour {
   name: string;
 }
 
+// Editable drink (for history view)
+export interface EditableDrink {
+  id: number;
+  name: string;
+}
+
 // New beer brand with flavours
 export interface NewBeerBrand {
   name: string;

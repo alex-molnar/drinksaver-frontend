@@ -40,13 +40,14 @@ const Layout: React.FC<LayoutProps> = ({
   const getNavValue = () => {
     if (location.pathname === '/') return 0;
     if (location.pathname === '/detailed') return 1;
+    if (location.pathname === '/history') return 2;
     return -1;
   };
 
   const handleNavChange = (_: React.SyntheticEvent, newValue: number) => {
     if (newValue === 0) navigate('/');
     else if (newValue === 1) navigate('/detailed');
-    // History tab placeholder - could navigate to '/history' in future
+    else if (newValue === 2) navigate('/history');
   };
 
   return (
@@ -144,7 +145,6 @@ const Layout: React.FC<LayoutProps> = ({
             <BottomNavigationAction
               label="History"
               icon={<HistoryIcon />}
-              disabled
             />
           </BottomNavigation>
         </Box>
