@@ -123,6 +123,7 @@ export interface NewBeerFlavour {
 export interface EditableDrink {
   id: number;
   name: string;
+  alcoholTypeId: number;
 }
 
 // New beer brand with flavours

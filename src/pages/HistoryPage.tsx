@@ -14,12 +14,61 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
+import SportsBarIcon from '@mui/icons-material/SportsBar';
+import WineBarIcon from '@mui/icons-material/WineBar';
+import LiquorIcon from '@mui/icons-material/Liquor';
+import NightlifeIcon from '@mui/icons-material/Nightlife';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import { getSavedDrinksByDate, deleteDrinksByIds } from '../api/endpoints';
 import type { EditableDrink } from '../types/api';
 
 const getTodayDate = () => new Date().toISOString().split('T')[0];
+
+/**
+ * Icon mapping for alcohol type IDs.
+ */
+const ALCOHOL_TYPE_ICONS: Record<number, React.ReactElement> = {
+  // Beer & similar
+  4: <SportsBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  21: <SportsBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  24: <SportsBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  
+  // Wine & wine-based
+  13: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  14: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  19: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  20: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  22: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  26: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  27: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  30: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  31: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  32: <WineBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  
+  // Spirits
+  6: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  7: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  8: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  9: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  10: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  11: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  12: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  15: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  16: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  17: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  18: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  25: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  28: <LiquorIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  
+  // Cocktails & mixed drinks
+  23: <NightlifeIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+  29: <NightlifeIcon sx={{ fontSize: 28, color: 'primary.main' }} />,
+};
+
+const getDrinkIcon = (alcoholTypeId: number) => {
+  return ALCOHOL_TYPE_ICONS[alcoholTypeId] || <LocalBarIcon sx={{ fontSize: 28, color: 'primary.main' }} />;
+};
 
 const HistoryPage: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState(getTodayDate());
@@ -189,13 +238,9 @@ const HistoryPage: React.FC = () => {
                   disableRipple
                   sx={{ mr: 1 }}
                 />
-                <LocalBarIcon
-                  sx={{
-                    color: 'primary.main',
-                    mr: 2,
-                    fontSize: 28,
-                  }}
-                />
+                <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
+                  {getDrinkIcon(drink.alcoholTypeId)}
+                </Box>
                 <Typography
                   variant="body1"
                   sx={{
