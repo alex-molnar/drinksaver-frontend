@@ -2,19 +2,18 @@ import React, { useState, useCallback } from 'react';
 import {
   Box,
   TextField,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  Card,
+  CardActionArea,
   Checkbox,
   IconButton,
   CircularProgress,
   Typography,
   Fab,
   Zoom,
+  Stack,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LocalBarIcon from '@mui/icons-material/LocalBar';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Layout from '../components/Layout';
 import { getSavedDrinksByDate, deleteDrinksByIds } from '../api/endpoints';
@@ -149,40 +148,87 @@ const HistoryPage: React.FC = () => {
     }
 
     return (
-      <List sx={{ width: '100%' }}>
+      <Stack spacing={1.5} sx={{ width: '100%' }}>
         {drinks.map((drink: EditableDrink) => (
-          <ListItem
+          <Card
             key={drink.id}
-            disablePadding
-            secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                onClick={() => handleDeleteSingle(drink.id)}
-                disabled={isDeleting}
-              >
-                <DeleteIcon />
-              </IconButton>
-            }
+            elevation={1}
+            sx={{
+              borderRadius: 2,
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                elevation: 3,
+                transform: 'translateY(-1px)',
+                boxShadow: 3,
+              },
+              opacity: isDeleting ? 0.6 : 1,
+            }}
           >
-            <ListItemButton
-              onClick={() => handleToggleSelect(drink.id)}
-              dense
-              disabled={isDeleting}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+              }}
             >
-              <ListItemIcon>
+              <CardActionArea
+                onClick={() => handleToggleSelect(drink.id)}
+                disabled={isDeleting}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  py: 1.5,
+                  px: 1,
+                  flex: 1,
+                }}
+              >
                 <Checkbox
-                  edge="start"
                   checked={selectedIds.has(drink.id)}
                   tabIndex={-1}
                   disableRipple
+                  sx={{ mr: 1 }}
                 />
-              </ListItemIcon>
-              <ListItemText primary={drink.name} />
-            </ListItemButton>
-          </ListItem>
+                <LocalBarIcon
+                  sx={{
+                    color: 'primary.main',
+                    mr: 2,
+                    fontSize: 28,
+                  }}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontWeight: 500,
+                    flex: 1,
+                    textAlign: 'left',
+                  }}
+                >
+                  {drink.name}
+                </Typography>
+              </CardActionArea>
+              <IconButton
+                aria-label="delete"
+                onClick={() => handleDeleteSingle(drink.id)}
+                disabled={isDeleting}
+                sx={{
+                  mr: 1,
+                  color: 'error.light',
+                  '&:hover': {
+                    color: 'error.main',
+                    backgroundColor: 'error.light',
+                    '& .MuiSvgIcon-root': {
+                      color: 'error.contrastText',
+                    },
+                  },
+                }}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Box>
+          </Card>
         ))}
-      </List>
+      </Stack>
     );
   };
 
